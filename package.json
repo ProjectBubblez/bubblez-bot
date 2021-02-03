@@ -1,0 +1,30 @@
+{
+  "name": "bubblez",
+  "version": "2.0.0",
+  "description": "The Bubblez bot source code",
+  "main": "index.js",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjectBubblez/bubblez-bot.git"
+  },
+  "keywords": [
+    "bubblez",
+    "bot",
+    "node",
+    "js"
+  ],
+  "author": "Bubblez.app Team (DarkMatter, SliceCraft, embed, bob5918)",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/ProjectBubblez/bubblez-bot/issues"
+  },
+  "homepage": "https://bubblez.app"
+}
