@@ -1,11 +1,17 @@
 require('dotenv').config();
 const Discord = require("discord.js");
-var bot = new Discord.Client();
+global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
-const ver = "V: 03022021";
-const footer = "Created by the Bubblez Team";
-var config;
+global.ver = "V: 04022021";
+global.footer = "Created by the Bubblez Team";
+global.config;
+global.developers = [
+    '200612445373464576',
+    '347067975544733707',
+    '476641014841475084'
+]
+global.prefix = "b!";
 
 try{
     let rawConfig = fs.readFileSync("./config.json");
@@ -13,6 +19,17 @@ try{
 }catch(err){
     return console.log("No config.json found")
 }
+
+console.log('➤  '.gray + "Started loading commands".gray);
+bot.commands = new Discord.Collection();
+let commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith('.js'));
+commandFiles.forEach(commandName => {
+    let command = require(`./commands/${commandName}`);
+    console.log('➤  '.gray + `Loading command: ${command.name}`.gray);
+    bot.commands.set(command.name, command);
+})
+console.log('➤  '.gray + "Finished loading commands".gray);
+
 function setFaze2() {
         bot.user.setPresence({ activity: { name: "Loading Game...", type: "WATCHING" }, status: "idle"});
 		console.log('➤  '.gray + colors.gray("Bot Faze One"));
@@ -64,11 +81,31 @@ bot.on("message", function(message){
         return;
     };
 
-    let prefix = "b!"
+    if(message.content == `<@${bot.user.id}>` || message.content == `<@!${bot.user.id}>`){
+        message.channel.send(`The prefix is: ${prefix}`);
+        return;
+    }
 
     if (!message.content.startsWith(prefix)) return;
   
     var args = message.content.substring(prefix.length).split(" ");
+
+    if(!bot.commands.get(args[0].toLowerCase())){
+        var Default = new Discord.MessageEmbed()
+            .setColor("RED")
+            .setDescription("Invalid Command\nUse " +prefix+ "help For Help");
+        message.channel.send(Default);
+        return;
+    }
+
+    try{
+        bot.commands.get(args[0].toLowerCase()).execute(message, args);
+    }catch(err){
+        console.log(`Command: ${args[0].toLowerCase()}, run by: ${message.author.username}#${message.author.discriminator} failed for the reason: ${err}`);
+        message.channel.send("Something went wrong");
+    }
+
+    return;
   
     switch (args[0].toLowerCase()) {
         default:
@@ -125,6 +162,5 @@ bot.on("message", function(message){
         break;
     }
 });
-
 
 bot.login(process.env.DTOKEN);
