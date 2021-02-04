@@ -48,12 +48,6 @@ bot.on("message", function(message){
   
     if (message.author.bot) return;
 
-    let prefix = "b!"
-
-    if (!message.content.startsWith(prefix)) return;
-  
-    var args = message.content.substring(prefix.length).split(" ");
-  
     if (!message.guild) {
 		let messageAttachment = message.attachments.size > 0 ? message.attachments.array()[0].url : null;
         var Support = new Discord.MessageEmbed()
@@ -61,19 +55,20 @@ bot.on("message", function(message){
             .setTitle("Support | "+message.author.username+"#"+message.author.discriminator)
             .addField("Channel:", "Direct Message")
             .addField("User:", "<@"+message.author.id+">")
+            .addField("Reason:", message.content)
             .setTimestamp()
             .setFooter(footer + " | " + ver);
-        if (!args[1]){
-            var reason = "No reason given.";
-        }else{
-            var reason = args.slice(1).join(" ");
-        }
-        Support.addField("Reason:", reason);
     	if (messageAttachment) Support.setImage(messageAttachment);
         bot.channels.cache.get(config.supportid).send(`<@&${config.staffid}>`, Support);
         message.reply("Support message sent to staff, a staff member should be with you soon.");
         return;
     };
+
+    let prefix = "b!"
+
+    if (!message.content.startsWith(prefix)) return;
+  
+    var args = message.content.substring(prefix.length).split(" ");
   
     switch (args[0].toLowerCase()) {
         default:
@@ -122,12 +117,12 @@ bot.on("message", function(message){
             var text = args.slice(2).join(" ");
             var client = message.channel.client;
 		    message.delete();
-            var user = client.users.fetch(id).then(user => {
-            user.send(text);
-            console.log("User " + message.author.username + " used the say command on server, " + message.guild.name + " || Sent '" + text + "' to " + user.username);
-        });
-      }
-      break;
+            client.users.fetch(id).then(user => {
+                user.send(text);
+                console.log("User " + message.author.username + " used the say command on server, " + message.guild.name + " || Sent '" + text + "' to " + user.username);
+            });
+        }
+        break;
     }
 });
 
