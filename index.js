@@ -13,24 +13,33 @@ try{
 }catch(err){
     return console.log("No config.json found")
 }
-
+function setFaze2() {
+        bot.user.setPresence({ activity: { name: "Loading Game...", type: "WATCHING" }, status: "idle"});
+		console.log('➤  '.gray + colors.gray("Bot Faze One"));
+        setActivity1();
+}
 function setActivity1() {
     setTimeout(function() {
-        bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "dnd"});
+        bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "online"});
         setActivity2();
     }, 15e3);
 }
 function setActivity2() {
     setTimeout(function() {
-        bot.user.setPresence({ activity: { name: ver, type: "PLAYING" }, status: "dnd"});
+        bot.user.setPresence({ activity: { name: ver, type: "PLAYING" }, status: "online"});
         setActivity1();
     }, 15e3);
 }
 
 bot.on("ready", function(){
-	bot.user.setPresence({ activity: { name: "Loading Screen...", type: "WATCHING" }, status: "dnd"});
-	setActivity1()
-	console.log('➤  '.gray + colors.gray("Bot online"));
+	bot.user.setPresence({ activity: { name: "Start Screen...", type: "WATCHING" }, status: "dnd"});
+	setTimeout(function() {
+		setFaze2()
+		setTimeout(function() {
+			console.log('✔  '.green + colors.green("Bot Online"));
+		}, 15e3);
+	}, 5e3);
+	console.log('➤  '.gray + colors.gray("Bot Loading"));
 });
 
 bot.on("message", function(message){
