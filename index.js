@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
+console.log('➤  '.gray + colors.gray("Bot Loading"));
 global.ver = "V: 04022021";
 global.footer = "Created by the Bubblez Team";
 global.config;
@@ -30,12 +31,6 @@ commandFiles.forEach(commandName => {
     bot.commands.set(command.name, command);
 })
 console.log('➤  '.gray + "Finished loading commands".gray);
-
-function setFaze2() {
-        bot.user.setPresence({ activity: { name: "Loading Game...", type: "WATCHING" }, status: "idle"});
-		console.log('➤  '.gray + colors.gray("Bot Faze One"));
-        setActivity1();
-}
 function setActivity1() {
     setTimeout(function() {
         bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "online"});
@@ -50,14 +45,9 @@ function setActivity2() {
 }
 
 bot.on("ready", function(){
-	bot.user.setPresence({ activity: { name: "Start Screen...", type: "WATCHING" }, status: "dnd"});
-	setTimeout(function() {
-		setFaze2()
-		setTimeout(function() {
-			console.log('✔  '.green + colors.green("Bot Online"));
-		}, 15e3);
-	}, 5e3);
-	console.log('➤  '.gray + colors.gray("Bot Loading"));
+	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
+	setActivity1();
+	console.log('✔  '.green + colors.green("Bot Online"));
 });
 
 bot.on("message", function(message){
