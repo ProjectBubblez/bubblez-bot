@@ -4,7 +4,7 @@ global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
-global.ver = "V: 04022021";
+global.ver = "V: 20210207";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -13,7 +13,7 @@ global.developers = [
     '476641014841475084',
     '316673724990488577'
 ]
-global.prefix = "b!";
+global.prefix = "!";
 
 try{
     let rawConfig = fs.readFileSync("./config.json");

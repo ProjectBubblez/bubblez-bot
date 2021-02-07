@@ -11,12 +11,13 @@ module.exports = {
         var commandOrder = [
             'help',
             'support',
+			'ping',
             'devs'
         ];
         var commandlist = "";
         commandOrder.forEach(commandName => {
             let command = bot.commands.get(commandName);
-            commandlist = commandlist + `${prefix}${commandName} '${command.description}'\n`;
+            commandlist = commandlist + `**${prefix}${commandName}** | **${command.aliases}** '${command.description}'\n`;
         });
         var Help = new MessageEmbed()
             .setColor("#00cc99")

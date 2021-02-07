@@ -17,7 +17,7 @@ module.exports = {
             pingEmbed.setDescription(`Pong! The message trip took ${(pingmsg.editedTimestamp || pingmsg.createdTimestamp) - (message.editedTimestamp || message.createdTimestamp)}ms. ${bot.ws.ping ? `The ping is ${Math.round(bot.ws.ping)}ms.` : ''}`);
             setTimeout(() => {
                 pingmsg.edit(pingEmbed).catch();
-            }, 1000);
+            }, 1e3);
         });
     }
 }
