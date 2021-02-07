@@ -16,7 +16,6 @@ module.exports = {
         var commandlist = "";
         commandOrder.forEach(commandName => {
             let command = bot.commands.get(commandName);
-            console.log(command);
             commandlist = commandlist + `${prefix}${commandName} '${command.description}'\n`;
         });
         var Help = new MessageEmbed()
