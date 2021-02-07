@@ -3,8 +3,10 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "devs",
+    "aliases": [
+        'd'
+    ],
     "description": "Show a list of devs",
-    "hideCommand": false,
     execute(message, args){
         var commandlist = "";
         bot.commands.forEach(command => {

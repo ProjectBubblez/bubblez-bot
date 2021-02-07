@@ -3,15 +3,22 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "help",
+    "aliases": [
+        'h'
+    ],
     "description": "Show all commands",
-    "hideCommand": false,
     execute(message, args){
+        var commandOrder = [
+            'help',
+            'support',
+            'devs'
+        ];
         var commandlist = "";
-        bot.commands.forEach(command => {
-            if(command.hideCommand == false){
-                commandlist = commandlist + `${prefix}${command.name} '${command.description}'\n`;
-            }
-        })
+        commandOrder.forEach(commandName => {
+            let command = bot.commands.get(commandName);
+            console.log(command);
+            commandlist = commandlist + `${prefix}${commandName} '${command.description}'\n`;
+        });
         var Help = new MessageEmbed()
             .setColor("#00cc99")
             .setTitle("Help")

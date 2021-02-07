@@ -29,6 +29,14 @@ commandFiles.forEach(commandName => {
     let command = require(`./commands/${commandName}`);
     console.log('➤  '.gray + `Loading command: ${command.name}`.gray);
     bot.commands.set(command.name, command);
+    if(command.aliases != undefined){
+        let commandCopy = Object.assign({}, command);
+        commandCopy.isAlias = true;
+        command.aliases.forEach(alias => {
+            console.log('➤  '.gray + `Loading command: ${command.name} under the alias ${alias}`.gray);
+            bot.commands.set(alias, commandCopy);
+        });
+    }
 })
 console.log('➤  '.gray + "Finished loading commands".gray);
 function setActivity1() {

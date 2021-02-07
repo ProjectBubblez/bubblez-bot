@@ -3,8 +3,10 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "support",
+    "aliases": [
+        's'
+    ],
     "description": "Send a request to support",
-    "hideCommand": false,
     execute(message, args){
         if(!args[1]){
             var reason = "No reason given.";

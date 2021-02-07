@@ -4,7 +4,6 @@ const {
 module.exports = {
     "name": "say",
     "description": "Say something",
-    "hideCommand": true,
     execute(message, args){
         if (!developers.includes(message.author.id)) {
             var Default = new MessageEmbed()
