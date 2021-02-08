@@ -5,7 +5,7 @@ const colors = require('colors');
 const fs = require('fs');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.5.10 DEVELOPMENT BUILD";
+global.ver = "V1.5.12 DEVELOPMENT BUILD";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -15,6 +15,10 @@ global.developers = [
     '316673724990488577'
 ]
 global.prefix = "!";
+var activitys = [
+	{ msg: ver, suggest: null},
+	{ msg: 'some bad music', suggest: 'DarkMatter#1708', sid: '200612445373464576'}
+]
 
 try{
     let rawConfig = fs.readFileSync("./config.json");
@@ -40,22 +44,33 @@ commandFiles.forEach(commandName => {
     }
 })
 console.log('➤  '.gray + "Finished loading commands".gray);
-function setActivity1() {
+function setActivity() {
     setTimeout(function() {
-        bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "online"});
-        setActivity2();
+		var knock = function() { 
+		var msg = activitys[Math.floor(Math.random() * activitys.length)]
+		return formatActivity(msg)
+		}
+
+		function formatActivity(msg) { 
+		return [
+			msg.msg + (msg.suggest == null ? "" : " - " + msg.suggest)
+		].join("")
+		}
+		bot.user.setPresence({ activity: { name: knock(), type: "PLAYING" }, status: "online"});
+        setActivity();
     }, 15e3);
 }
-function setActivity2() {
-    setTimeout(function() {
-        bot.user.setPresence({ activity: { name: ver, type: "PLAYING" }, status: "online"});
-        setActivity1();
-    }, 15e3);
-}
+//function setActivity2() {
+//    setTimeout(function() {
+//		  bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "online"});
+//        bot.user.setPresence({ activity: { name: ver, type: "PLAYING" }, status: "online"});
+//        setActivity1();
+//    }, 15e3);
+//}
 
 bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
-	setActivity1();
+	setActivity();
 	console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
 });
 
