@@ -4,6 +4,7 @@ const {
 module.exports = {
     "name": "devs",
     "aliases": [
+		'dev',
         'd'
     ],
     "description": "Show a list of devs",

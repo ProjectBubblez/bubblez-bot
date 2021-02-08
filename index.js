@@ -4,7 +4,7 @@ global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
-global.ver = "V: 20210207";
+global.ver = "V: 20210208";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
