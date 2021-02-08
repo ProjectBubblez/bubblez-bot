@@ -55,7 +55,7 @@ function setActivity2() {
 bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
 	setActivity1();
-	console.log('✔  '.green + colors.green("Bot Online"));
+	console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
 });
 
 bot.on("message", function(message){
