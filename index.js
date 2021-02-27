@@ -17,7 +17,8 @@ global.developers = [
 global.prefix = "!";
 var activitys = [
 	{ msg: ver, suggest: null},
-	{ msg: 'some bad music', suggest: 'DarkMatter#1708', sid: '200612445373464576'}
+	{ msg: 'some bad music', suggest: 'DarkMatter#1708', sid: '200612445373464576'},
+	{ msg: 'show cool messages', suggest: 'embed#2752', sid: '476641014841475084' }
 ]
 
 try{
