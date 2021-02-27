@@ -68,9 +68,46 @@ function setActivity() {
 //    }, 15e3);
 //}
 
+function startCheckingGiveaways(){
+    // Code not finished
+    setInterval(() => {
+        let giveaways = JSON.parse(fs.readFileSync("./giveaways.json"));
+        let time = new Date();
+        console.log(Object.keys(giveaways));
+        Object.keys(giveaways).forEach(giveawayNumber => {
+            let giveaway = giveaways[giveawayNumber];
+            if(giveaway.winner != undefined) return;
+            if(giveaway.endtime < time.getTime()){
+                bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
+                    let title = message.embeds[0].title;
+                    message.reactions.cache.get("🎉").users.fetch().then(users => {
+                        delete users[bot.user.id];
+                        let newUsers = new Array;
+                        users.map(u => {
+                            if(u.id != bot.user.id){
+                                newUsers.push(u.id);
+                            }
+                        });
+                        let user = newUsers[Math.floor(Math.random() * newUsers.length)];
+                        giveaways[giveawayNumber].winner = user;
+                        console.log(giveaways);
+                        bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
+                    })
+                }).catch(() => {
+                    return;
+                });
+            }
+        }).then(() => {
+            fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
+        });
+    }, 6e3)
+}
+
 bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
-	setActivity();
+    setActivity();
+    // Code not working yet
+    // startCheckingGiveaways();
 	console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
 });
 
