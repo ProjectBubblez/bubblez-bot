@@ -3,9 +3,10 @@ const Discord = require("discord.js");
 global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
+const axios = require('axios');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.5.13 DEVELOPMENT BUILD";
+global.ver = "V1.5.14 DEVELOPMENT BUILD";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -70,14 +71,12 @@ function setActivity() {
 //}
 
 function startCheckingGiveaways(){
-    // Code not finished
     setInterval(() => {
         let giveaways = JSON.parse(fs.readFileSync("./giveaways.json"));
         let time = new Date();
-        console.log(Object.keys(giveaways));
         Object.keys(giveaways).forEach(giveawayNumber => {
             let giveaway = giveaways[giveawayNumber];
-            if(giveaway.winner != undefined) return;
+            if(giveaway.winner != 0) return;
             if(giveaway.endtime < time.getTime()){
                 bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
                     let title = message.embeds[0].title;
@@ -90,26 +89,29 @@ function startCheckingGiveaways(){
                             }
                         });
                         let user = newUsers[Math.floor(Math.random() * newUsers.length)];
-                        giveaways[giveawayNumber].winner = user;
-                        console.log(giveaways);
-                        bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
+                        
+                        if(user){
+                            bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
+                            giveaways[giveawayNumber].winner = user;
+                        }else{
+                            bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
+                            giveaways[giveawayNumber].winner = 1;
+                        }
+                        fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
                     })
                 }).catch(() => {
                     return;
                 });
             }
-        }).then(() => {
-            fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
-        });
+        })
     }, 6e3)
 }
 
 bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
     setActivity();
-    // Code not working yet
-    // startCheckingGiveaways();
-	console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
+    startCheckingGiveaways();
+    console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
 });
 
 bot.on("message", function(message){

@@ -6,7 +6,10 @@ module.exports = {
     "name": "startgiveaway",
     "description": "Start a giveaway",
     execute(message, args){
-        return message.channel.send("No");
+        if(!developers.includes(message.author.id)){
+            message.channel.send("You don't have enough permissions")
+            return;
+        }
         let channelid, prize;
         message.channel.send("What channel do you want the giveaway to be in?");
         const filter = m => m.author.id == message.author.id;
@@ -121,7 +124,8 @@ module.exports = {
                                             "channelid": channelid,
                                             "messageid": message.id,
                                             "prize": prize,
-                                            "endtime": giveawayEnd
+                                            "endtime": giveawayEnd,
+                                            "winner": 0
                                         };
                                         fs.writeFileSync(__dirname + "/../giveaways.json", JSON.stringify(Giveaways));
                                     });
