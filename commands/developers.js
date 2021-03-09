@@ -17,7 +17,7 @@ module.exports = {
             .setColor("#00cc99")
             .setTitle("Developers")
             .setDescription(DevList)
-            .setFooter(footer + " | " + ver);
+            .setFooter(ver);
         message.channel.send(Help);
     }
 }

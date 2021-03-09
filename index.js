@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.5.14 DEVELOPMENT BUILD";
+global.ver = "V1.5.15 DEVELOPMENT BUILD";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -97,7 +97,7 @@ function startCheckingGiveaways(){
                             bot.users.fetch(user).then((userObject) => {
                                 let params = new URLSearchParams();
                                 params.append('from', 'Bubblez Bot');
-                                params.append('post', `${userObject.username} won: ${title}`);
+                                params.append('post', `${userObject.username} won: ${title}!!! 🎉🎉🎉`);
                                 params.append('locked', 'off');
                                 params.append('token', process.env.BTOKEN);
                                 fetch('https://bubblez.app/api/sendpost', {
@@ -105,10 +105,12 @@ function startCheckingGiveaways(){
                                     body: params,
                                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                                 });
+							console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
                         }else{
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
                             giveaways[giveawayNumber].winner = 1;
+							console.log(`None won the giveaway`);
                         }
                         fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
                     })
@@ -142,7 +144,7 @@ bot.on("message", function(message){
             .addField("User:", "<@"+message.author.id+">")
             .addField("Reason:", message.content)
             .setTimestamp()
-            .setFooter(footer + " | " + ver);
+            .setFooter(ver);
     	if (messageAttachment) Support.setImage(messageAttachment);
         bot.channels.cache.get(config.supportid).send(`<@&${config.staffid}>`, Support);
         message.reply("Support message sent to staff, a staff member should be with you soon.");

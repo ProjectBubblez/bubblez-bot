@@ -21,7 +21,7 @@ module.exports = {
             .addField("User:", "<@" + message.author.id + ">")
             .addField("Reason:", reason)
             .setTimestamp()
-            .setFooter(footer + " | " + ver);
+            .setFooter(ver);
         
         bot.channels.cache.get(config.supportid).send(`<@&${config.staffid}>`, Support);
         message.reply("Support message sent to staff, a staff member should be with you soon.")

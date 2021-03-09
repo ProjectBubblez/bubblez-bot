@@ -23,7 +23,7 @@ module.exports = {
             .setColor("#00cc99")
             .setTitle("Help")
             .addField("Commands", commandlist)
-            .setFooter(footer + " | " + ver);
+            .setFooter(ver);
         message.channel.send(Help);
     }
 }

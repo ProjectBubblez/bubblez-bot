@@ -12,7 +12,7 @@ module.exports = {
             .setColor("#00cc99")
             .setTitle("Ping")
             .setDescription("Pinging...")
-            .setFooter(footer + " | " + ver);
+            .setFooter(ver);
         message.channel.send(pingEmbed).then(pingmsg => {
             pingEmbed.setDescription(`Pong! The message trip took ${(pingmsg.editedTimestamp || pingmsg.createdTimestamp) - (message.editedTimestamp || message.createdTimestamp)}ms. ${bot.ws.ping ? `The ping is ${Math.round(bot.ws.ping)}ms.` : ''}`);
             setTimeout(() => {

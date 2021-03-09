@@ -4,6 +4,9 @@ const {
 const fs = require('fs');
 module.exports = {
     "name": "startgiveaway",
+	"aliases": [
+        'sg'
+    ],
     "description": "Start a giveaway",
     execute(message, args){
         if(!developers.includes(message.author.id)){
@@ -110,7 +113,7 @@ module.exports = {
                                         return;
                                     }
                                     GiveawayEmbed = new MessageEmbed();
-                                    GiveawayEmbed.setFooter(footer + " | " + ver);
+                                    GiveawayEmbed.setFooter(ver);
                                     GiveawayEmbed.setTitle(prize);
                                     let GiveawayEndTime = new Date(giveawayEnd);
                                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:`);
