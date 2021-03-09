@@ -3,8 +3,8 @@ const Discord = require("discord.js");
 global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
-const fetch = require('node-fetch');
-const { URLSearchParams } = require('url');
+const bubblez = require("bubblez.js");
+const BubblezClient = new bubblez.client(process.env.BTOKEN);
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
 global.ver = "V1.5.15 DEVELOPMENT BUILD";
@@ -95,16 +95,7 @@ function startCheckingGiveaways(){
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
                             giveaways[giveawayNumber].winner = user;
                             bot.users.fetch(user).then((userObject) => {
-                                let params = new URLSearchParams();
-                                params.append('from', 'Bubblez Bot');
-                                params.append('post', `${userObject.username} won: ${title}!!! 🎉🎉🎉`);
-                                params.append('locked', 'off');
-                                params.append('token', process.env.BTOKEN);
-                                fetch('https://bubblez.app/api/sendpost', {
-                                    method: 'POST',
-                                    body: params,
-                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                                });
+                                BubblezClient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Bubblez Bot" })
 							console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
                         }else{
@@ -119,7 +110,7 @@ function startCheckingGiveaways(){
                 });
             }
         })
-    }, 6e3)
+    }, 6e4)
 }
 
 bot.on("ready", function(){
