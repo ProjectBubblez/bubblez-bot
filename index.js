@@ -3,7 +3,8 @@ const Discord = require("discord.js");
 global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
-const axios = require('axios');
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
 global.ver = "V1.5.14 DEVELOPMENT BUILD";
@@ -93,6 +94,18 @@ function startCheckingGiveaways(){
                         if(user){
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
                             giveaways[giveawayNumber].winner = user;
+                            bot.users.fetch(user).then((userObject) => {
+                                let params = new URLSearchParams();
+                                params.append('from', 'Bubblez Bot');
+                                params.append('post', `${userObject.username} won: ${title}`);
+                                params.append('locked', 'off');
+                                params.append('token', process.env.BTOKEN);
+                                fetch('https://bubblez.app/api/sendpost', {
+                                    method: 'POST',
+                                    body: params,
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                                });
+                            })
                         }else{
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
                             giveaways[giveawayNumber].winner = 1;
