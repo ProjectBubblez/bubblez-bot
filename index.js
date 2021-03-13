@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.7.16";
+global.ver = "V1.7.17";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -18,10 +18,10 @@ global.developers = [
 ]
 global.prefix = "!";
 var activitys = [
-	{ msg: ver, suggest: null},
-	{ msg: 'some bad music', suggest: 'DarkMatter#1708', sid: '200612445373464576'},
-    { msg: 'show cool messages', suggest: 'embed#2752', sid: '476641014841475084' },
-    { msg: 'Playing with some catgirls', suggest: 'embed#2752', sid: '476641014841475084'}
+	{ msg: ver, suggest: '709745787093123119'},
+	{ msg: 'some bad music', suggest: '200612445373464576'},
+    { msg: 'show cool messages', suggest: '476641014841475084'},
+    { msg: 'Playing with some catgirls', suggest: '476641014841475084'}
 ]
 
 try{
@@ -50,17 +50,18 @@ commandFiles.forEach(commandName => {
 console.log('➤  '.gray + "Finished loading commands".gray);
 function setActivity() {
     setTimeout(function() {
-		var knock = function() { 
+		
 		var msg = activitys[Math.floor(Math.random() * activitys.length)]
-		return formatActivity(msg)
+		
+		bot.users.fetch(msg.suggest).then(i => {
+		if(i.username == "Bubblez"){
+			var activityss = msg.msg;
+		}else{
+			var activityss = msg.msg + " - " + i.username + "#" + i.discriminator;
 		}
-
-		function formatActivity(msg) { 
-		return [
-			msg.msg + (msg.suggest == null ? "" : " - " + msg.suggest)
-		].join("")
-		}
-		bot.user.setPresence({ activity: { name: knock(), type: "PLAYING" }, status: "online"});
+		bot.user.setPresence({ activity: { name: activityss, type: "PLAYING" }, status: "online"});
+		});
+		
         setActivity();
     }, 15e3);
 }
