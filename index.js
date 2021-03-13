@@ -95,12 +95,28 @@ function startCheckingGiveaways(){
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
                             giveaways[giveawayNumber].winner = user;
                             bot.users.fetch(user).then((userObject) => {
-                                BubblezClient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Bubblez Bot" })
-							console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
+                                GiveawayEmbed = new Discord.MessageEmbed();
+                                GiveawayEmbed.setFooter(ver);
+                                GiveawayEmbed.setTitle(giveaway.prize);
+                                let GiveawayEndTime = new Date(giveaway.endtime);
+                                GiveawayEmbed.setDescription(`Giveaway ended!\nWinner: <@${userObject.id}>`);
+                                GiveawayEmbed.setColor(0x00EEFF);
+                                GiveawayEmbed.setTimestamp(GiveawayEndTime);
+                                message.edit(GiveawayEmbed);
+                                BubblezClient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Bubblez Bot" });
+							    console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
                         }else{
                             bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
                             giveaways[giveawayNumber].winner = 1;
+                            GiveawayEmbed = new Discord.MessageEmbed();
+                            GiveawayEmbed.setFooter(ver);
+                            GiveawayEmbed.setTitle(giveaway.prize);
+                            let GiveawayEndTime = new Date(giveaway.endtime);
+                            GiveawayEmbed.setDescription(`Giveaway ended!\nNo-one won :(`);
+                            GiveawayEmbed.setColor(0x00EEFF);
+                            GiveawayEmbed.setTimestamp(GiveawayEndTime);
+                            message.edit(GiveawayEmbed);
 							console.log(`None won the giveaway`);
                         }
                         fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
@@ -108,9 +124,36 @@ function startCheckingGiveaways(){
                 }).catch(() => {
                     return;
                 });
+            }else{
+                bot.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
+                    GiveawayEmbed = new Discord.MessageEmbed();
+                    GiveawayEmbed.setFooter(ver);
+                    GiveawayEmbed.setTitle(giveaway.prize);
+                    let GiveawayEndTime = new Date(giveaway.endtime);
+                    let endtimeinms = GiveawayEndTime.getTime() - time.getTime();
+                    let timeRemaining = "";
+                    if(endtimeinms > 86400000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 86400000) + " days "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 86400000) * 86400000);
+                    }
+                    if(endtimeinms > 3600000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 3600000) + " hours "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 3600000) * 3600000);
+                    }
+                    if(endtimeinms > 60000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 60000) + " minutes "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 60000) * 60000);
+                    }
+                    timeRemaining = timeRemaining + Math.floor(endtimeinms / 1000) + " seconds "
+                    endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
+                    GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
+                    GiveawayEmbed.setColor(0x00EEFF);
+                    GiveawayEmbed.setTimestamp();
+                    message.edit(GiveawayEmbed);
+                });
             }
         })
-    }, 6e4)
+    }, 3e4)
 }
 
 bot.on("ready", function(){

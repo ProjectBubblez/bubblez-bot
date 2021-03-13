@@ -116,7 +116,23 @@ module.exports = {
                                     GiveawayEmbed.setFooter(ver);
                                     GiveawayEmbed.setTitle(prize);
                                     let GiveawayEndTime = new Date(giveawayEnd);
-                                    GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:`);
+                                    let endtimeinms = GiveawayEndTime.getTime() - time.getTime();
+                                    let timeRemaining = "";
+                                    if(endtimeinms > 86400000){
+                                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 86400000) + " days "
+                                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 86400000) * 86400000);
+                                    }
+                                    if(endtimeinms > 3600000){
+                                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 3600000) + " hours "
+                                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 3600000) * 3600000);
+                                    }
+                                    if(endtimeinms > 60000){
+                                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 60000) + " minutes "
+                                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 60000) * 60000);
+                                    }
+                                    timeRemaining = timeRemaining + Math.floor(endtimeinms / 1000) + " seconds "
+                                    endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
+                                    GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
                                     GiveawayEmbed.setColor(0x00EEFF);
                                     GiveawayEmbed.setTimestamp(GiveawayEndTime);
                                     channel.send(GiveawayEmbed).then(message => {
