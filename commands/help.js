@@ -11,6 +11,7 @@ module.exports = {
         var commandOrder = [
             'help',
             'support',
+            'getuser',
 			'ping',
             'devs'
         ];

@@ -4,10 +4,10 @@ global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
 const bubblez = require("bubblez.js");
-const BubblezClient = new bubblez.client(process.env.BTOKEN);
+global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.5.15 DEVELOPMENT BUILD";
+global.ver = "V1.7.16";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -20,7 +20,8 @@ global.prefix = "!";
 var activitys = [
 	{ msg: ver, suggest: null},
 	{ msg: 'some bad music', suggest: 'DarkMatter#1708', sid: '200612445373464576'},
-	{ msg: 'show cool messages', suggest: 'embed#2752', sid: '476641014841475084' }
+    { msg: 'show cool messages', suggest: 'embed#2752', sid: '476641014841475084' },
+    { msg: 'Playing with some catgirls', suggest: 'embed#2752', sid: '476641014841475084'}
 ]
 
 try{
@@ -156,6 +157,10 @@ function startCheckingGiveaways(){
     }, 3e4)
 }
 
+BubblezClient.once('ready', user => {
+    console.log('✔  '.green + colors.green(`Logged into bubblez as: ${user.username}`));
+});
+
 bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
     setActivity();
@@ -211,3 +216,4 @@ bot.on("message", function(message){
 });
 
 bot.login(process.env.DTOKEN);
+BubblezClient.login(process.env.BTOKEN);
