@@ -5,6 +5,7 @@ module.exports = {
     "name": "privatecanvas",
     "aliases": [
         'pcanvas',
+		'pc'
     ],
     "description": "Show your own or someone else's canvas",
     execute(message, args){
