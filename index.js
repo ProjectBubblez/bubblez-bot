@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.7.17";
+global.ver = "V1.11.18";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -16,13 +16,33 @@ global.developers = [
     '476641014841475084',
     '316673724990488577'
 ]
-global.prefix = "!";
+global.prefix = "-";
 var activitys = [
 	{ msg: ver, suggest: '709745787093123119'},
 	{ msg: 'some bad music', suggest: '200612445373464576'},
     { msg: 'show cool messages', suggest: '476641014841475084'},
-    { msg: 'Playing with some catgirls', suggest: '476641014841475084'}
+    { msg: ' with some catgirls', suggest: '476641014841475084'}
 ]
+
+if(fs.existsSync("./publiccanvas.json")){
+    global.canvas = JSON.parse(fs.readFileSync("./publiccanvas.json"));
+}else{
+    global.canvas = {};
+    let canvasy = 11;
+    let canvasx = 12;
+    for(var y = 0; y != canvasy; y++){
+        canvas[y] = {};
+        for(var x = 0; x != canvasx; x++){
+            canvas[y][x] = ":white_circle:";
+        }
+    }
+}
+
+if(fs.existsSync("./privatecanvas.json")){
+    global.privatecanvas = JSON.parse(fs.readFileSync("./privatecanvas.json"));
+}else{
+    global.privatecanvas = {};
+}
 
 try{
     let rawConfig = fs.readFileSync("./config.json");
@@ -174,22 +194,6 @@ bot.on("message", function(message){
     if (message.author.equals(bot.user)) return;
   
     if (message.author.bot) return;
-
-    if (!message.guild) {
-		let messageAttachment = message.attachments.size > 0 ? message.attachments.array()[0].url : null;
-        var Support = new Discord.MessageEmbed()
-            .setColor("#ff8c00")
-            .setTitle("Support | "+message.author.username+"#"+message.author.discriminator)
-            .addField("Channel:", "Direct Message")
-            .addField("User:", "<@"+message.author.id+">")
-            .addField("Reason:", message.content)
-            .setTimestamp()
-            .setFooter(ver);
-    	if (messageAttachment) Support.setImage(messageAttachment);
-        bot.channels.cache.get(config.supportid).send(`<@&${config.staffid}>`, Support);
-        message.reply("Support message sent to staff, a staff member should be with you soon.");
-        return;
-    };
 
     if(message.content == `<@${bot.user.id}>` || message.content == `<@!${bot.user.id}>`){
         message.channel.send(`The prefix is: ${prefix}`);

@@ -12,6 +12,10 @@ module.exports = {
             'help',
             'support',
             'getuser',
+            'canvas',
+            'publicdraw',
+            'privatecanvas',
+            'privatedraw',
 			'ping',
             'devs'
         ];

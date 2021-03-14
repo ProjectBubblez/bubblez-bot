@@ -15,7 +15,7 @@ module.exports = {
         let userinfo = new MessageEmbed();
         BubblezClient.getUser(args[1]).then(user => {
             userinfo.setTitle("Bubblez Profile Info");
-            userinfo.setDescription("Made with: [[bubblez.js](https://www.npmjs.com/package/bubblez.js)]");
+            userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor(0x00EEFF);
             userinfo.addField("Username", `[${user.username}](https://bubblez.app/p?${user.username})`, true);
             userinfo.addField("Displayname", user.displayname, true);
