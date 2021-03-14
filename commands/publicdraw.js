@@ -2,9 +2,12 @@ const {
     MessageEmbed
 } = require("discord.js");
 const fs = require('fs');
+const ms = require('ms');
+let cooldown = {};
 module.exports = {
-    "name": "publicdraw",
+    "name": "draw",
     "aliases": [
+        'publicdraw',
         'pudraw',
         'pud'
     ],
@@ -13,6 +16,21 @@ module.exports = {
         if(!message.guild){
             message.channel.send("This command is guild only");
             return;
+        }
+        let time = new Date();
+        if(cooldown[message.author.id] == undefined){
+            cooldown[message.author.id] = time.getTime() + 6e4;
+        }else{
+            if(cooldown[message.author.id] > time.getTime()){
+                message.channel.send("This command is currently on cooldown. Try again in: " + ms(cooldown[message.author.id] - time.getTime())).then(cooldownmessage => {
+                    setTimeout(() => {
+                        cooldownmessage.delete()
+                    }, 5e3);
+                });
+                return;
+            }else{
+                cooldown[message.author.id] = time.getTime() + 6e4;
+            }
         }
         if(args[1] == undefined || args[2] == undefined || args[3] == undefined){
             message.channel.send("Invalid command usage: -publicdraw (y) (x) (color)\ny is 1 on the top left and 11 on the bottom left.\nx is 1 on the top left and 12 on the top right.");
