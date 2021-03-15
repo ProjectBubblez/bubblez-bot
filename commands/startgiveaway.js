@@ -147,6 +147,7 @@ module.exports = {
                                             "winner": 0
                                         };
                                         fs.writeFileSync(__dirname + "/../giveaways.json", JSON.stringify(Giveaways));
+					BubblezClient.send(`New giveaway started\nPrize ${prize}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways" });
                                     });
                                 }else{
                                     return message.channel.send("You gave me a wrong format, example: 30d 15h 20m");
