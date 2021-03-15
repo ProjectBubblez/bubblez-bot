@@ -134,7 +134,6 @@ module.exports = {
                                     endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
                                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
                                     GiveawayEmbed.setColor(0x00EEFF);
-                                    GiveawayEmbed.setTimestamp(GiveawayEndTime);
                                     channel.send(GiveawayEmbed).then(message => {
                                         message.react("🎉");
                                         let Giveaways = JSON.parse(fs.readFileSync(__dirname + "/../giveaways.json"));
@@ -147,7 +146,7 @@ module.exports = {
                                             "winner": 0
                                         };
                                         fs.writeFileSync(__dirname + "/../giveaways.json", JSON.stringify(Giveaways));
-					BubblezClient.send(`New giveaway started\nPrize ${prize}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways" });
+										BubblezClient.send(`New giveaway started\nPrize ${prize}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways" });
                                     });
                                 }else{
                                     return message.channel.send("You gave me a wrong format, example: 30d 15h 20m");

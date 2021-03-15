@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.13.22";
+global.ver = "V1.13.23";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -171,7 +171,6 @@ function startCheckingGiveaways(){
                     endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
                     GiveawayEmbed.setColor(0x00EEFF);
-                    GiveawayEmbed.setTimestamp();
                     message.edit(GiveawayEmbed);
                 });
             }
