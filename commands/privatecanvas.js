@@ -18,7 +18,13 @@ module.exports = {
                 userid = args[1].replace(/[<]|[@]|[!]|[>]/g, "");
             }
         }else{
-            userid = message.author.id;
+            if(!Object.keys(privatecanvas).includes(message.author.id)){
+                message.channel.send("You don't have a canvas");
+                return;
+            }else{
+                userid = message.author.id;
+            }
+
         }
         let canvastext = "";
         Object.keys(privatecanvas[userid]).forEach(y => {
