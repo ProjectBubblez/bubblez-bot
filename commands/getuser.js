@@ -16,7 +16,7 @@ module.exports = {
         BubblezClient.getUser(args[1]).then(user => {
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
-            userinfo.setColor(0x00EEFF);
+            userinfo.setColor("#00cc99");
             userinfo.addField("Username", `[${user.username}](https://bubblez.app/p?${user.username})`, true);
             userinfo.addField("Displayname", user.displayname, true);
             userinfo.addField("Rank", user.rank, true);

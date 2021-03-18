@@ -123,7 +123,7 @@ function startCheckingGiveaways(){
                                 GiveawayEmbed.setTitle(giveaway.prize);
                                 let GiveawayEndTime = new Date(giveaway.endtime);
                                 GiveawayEmbed.setDescription(`Giveaway ended!\nWinner: <@${userObject.id}>`);
-                                GiveawayEmbed.setColor(0x00EEFF);
+                                GiveawayEmbed.setColor("#cc0000");
                                 GiveawayEmbed.setTimestamp(GiveawayEndTime);
                                 message.edit(GiveawayEmbed);
                                 BubblezClient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways" });
@@ -137,7 +137,7 @@ function startCheckingGiveaways(){
                             GiveawayEmbed.setTitle(giveaway.prize);
                             let GiveawayEndTime = new Date(giveaway.endtime);
                             GiveawayEmbed.setDescription(`Giveaway ended!\nNo-one won :(`);
-                            GiveawayEmbed.setColor(0x00EEFF);
+                            GiveawayEmbed.setColor("#cc0000");
                             GiveawayEmbed.setTimestamp(GiveawayEndTime);
                             message.edit(GiveawayEmbed);
 							console.log(`None won the giveaway`);
@@ -170,7 +170,7 @@ function startCheckingGiveaways(){
                     timeRemaining = timeRemaining + Math.floor(endtimeinms / 1000) + " seconds "
                     endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
-                    GiveawayEmbed.setColor(0x00EEFF);
+                    GiveawayEmbed.setColor("#00cc99");
                     message.edit(GiveawayEmbed);
                 });
             }

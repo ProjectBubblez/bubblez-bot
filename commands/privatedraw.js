@@ -70,7 +70,7 @@ module.exports = {
         let canvasEmbed = new MessageEmbed();
         canvasEmbed.setDescription(canvastext);
         canvasEmbed.setTitle("Private Canvas");
-        canvasEmbed.setColor(0x00EEFF);
+        canvasEmbed.setColor("#00cc99");
         canvasEmbed.setFooter(ver);
         message.channel.send(canvasEmbed);
         fs.writeFileSync('./privatecanvas.json', JSON.stringify(privatecanvas));

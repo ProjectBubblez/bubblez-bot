@@ -133,7 +133,7 @@ module.exports = {
                                     timeRemaining = timeRemaining + Math.floor(endtimeinms / 1000) + " seconds "
                                     endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
                                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
-                                    GiveawayEmbed.setColor(0x00EEFF);
+                                    GiveawayEmbed.setColor("#00cc99");
                                     channel.send(GiveawayEmbed).then(message => {
                                         message.react("🎉");
                                         let Giveaways = JSON.parse(fs.readFileSync(__dirname + "/../giveaways.json"));
