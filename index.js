@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.13.24";
+global.ver = "V1.13.25";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -18,11 +18,11 @@ global.developers = [
 ]
 global.prefix = "-";
 var activitys = [
-	{ msg: ver, suggest: '709745787093123119'},
-	{ msg: 'some bad music', suggest: '200612445373464576'},
-    { msg: 'show cool messages', suggest: '476641014841475084'},
-    { msg: 'with some catgirls', suggest: '476641014841475084'},
-	{ msg: 'trombone porn', suggest: '430520245288173568'}
+	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' , status: 'online'},
+	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' , status: 'online'},
+    	{ msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' , status: 'online'},
+    	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' , status: 'online'},
+	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' , status: 'online'}
 ]
 
 if(fs.existsSync("./publiccanvas.json")){
@@ -80,19 +80,12 @@ function setActivity() {
 		}else{
 			var activityss = msg.msg + " - " + i.username + "#" + i.discriminator;
 		}
-		bot.user.setPresence({ activity: { name: activityss, type: "PLAYING" }, status: "online"});
+		bot.user.setPresence({ activity: { name: activityss, type: msg.type }, status: msg.status});
 		});
 		
         setActivity();
     }, 15e3);
 }
-//function setActivity2() {
-//    setTimeout(function() {
-//		  bot.user.setPresence({ activity: { name: "Development", type: "WATCHING" }, status: "online"});
-//        bot.user.setPresence({ activity: { name: ver, type: "PLAYING" }, status: "online"});
-//        setActivity1();
-//    }, 15e3);
-//}
 
 function startCheckingGiveaways(){
     setInterval(() => {
