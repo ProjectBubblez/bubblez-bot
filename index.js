@@ -18,11 +18,12 @@ global.developers = [
 ]
 global.prefix = "-";
 var activitys = [
-	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' , status: 'online'},
-	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' , status: 'online'},
-    	{ msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' , status: 'online'},
-    	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' , status: 'online'},
-	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' , status: 'online'}
+	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
+	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
+	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' },
+    { msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
+    { msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
+	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' }
 ]
 
 if(fs.existsSync("./publiccanvas.json")){
@@ -80,7 +81,7 @@ function setActivity() {
 		}else{
 			var activityss = msg.msg + " - " + i.username + "#" + i.discriminator;
 		}
-		bot.user.setPresence({ activity: { name: activityss, type: msg.type }, status: msg.status});
+		bot.user.setPresence({ activity: { name: activityss, type: msg.type }, status: 'online'});
 		});
 		
         setActivity();
