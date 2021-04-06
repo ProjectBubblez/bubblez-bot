@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.13.25";
+global.ver = "V1.14.26";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -16,7 +16,7 @@ global.developers = [
     '476641014841475084',
     '316673724990488577'
 ]
-global.prefix = "-";
+global.prefix = "!";
 var activitys = [
 	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
 	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
