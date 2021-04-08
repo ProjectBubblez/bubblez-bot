@@ -20,7 +20,7 @@ module.exports = {
 	    userinfo.addField("UUID", user.UUID, true);
             userinfo.addField("Username", `[${user.username}](https://bubblez.app/p?${user.username})`, true);
             userinfo.addField("Displayname", user.displayname, true);
-            userinfo.addField("Rank", `${user.rank ? user.rank : "user"`, true);
+            userinfo.addField("Rank", `${user.rank ? user.rank : "user"}`, true);
             userinfo.addField("Coins", user.coins, true);
             userinfo.setFooter(ver);
             let bio;
