@@ -24,7 +24,7 @@ module.exports = {
             userinfo.addField("Coins", user.coins, true);
             userinfo.setFooter(ver);
             let bio;
-            if(user.bio.length > 100){
+            if(user.bio && user.bio.length > 100){
                 bio = user.bio.slice(0, 100) + "...";
             }else{
                 bio = user.bio;
