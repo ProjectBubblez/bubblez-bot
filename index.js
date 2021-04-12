@@ -7,7 +7,7 @@ const bubblez = require("bubblez.js");
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
-global.ver = "V1.14.26";
+global.ver = "V1.14.27";
 global.footer = "Created by the Bubblez Team";
 global.config;
 global.developers = [
@@ -181,6 +181,26 @@ bot.on("ready", function(){
     setActivity();
     startCheckingGiveaways();
     console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
+});
+
+bot.on('guildCreate', async function(guild){
+    const welcomeembed = new Discord.MessageEmbed()
+        .setTitle("Joined a server")
+        .setColor("#00cc99")
+        .addField(`Server name:`, `${guild.name}`)
+        .setThumbnail(`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`)
+        .setFooter(ver);
+    bot.channels.cache.get("831238583221485568").send(welcomeembed)
+});
+
+bot.on('guildDelete', async function(guild){
+    const byeembed = new Discord.MessageEmbed()
+        .setTitle("Left a server")
+        .setColor("#cc0000")
+        .addField(`Server name:`, `${guild.name}`)
+        .setThumbnail(`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`)
+        .setFooter(ver);
+    bot.channels.cache.get("831238583221485568").send(byeembed)
 });
 
 bot.on("message", function(message){
