@@ -31,7 +31,7 @@ module.exports = {
             if(user.pronoun == "vever") pronoun = "Ve/Ver";
             if(user.pronoun == "xexem") pronoun = "Xe/Xem";
             if(user.pronoun == "ziehir") pronoun = "Zie/Hir";
-            if(user.pronoun == "brobro") pronoun = "BRO/Bro";
+            if(user.pronoun == "brobro") pronoun = "Bro/Bro";
             if(user.pronoun == "none") pronoun = "None";
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
