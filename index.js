@@ -4,12 +4,14 @@ global.bot = new Discord.Client();
 const colors = require('colors');
 const fs = require('fs');
 const bubblez = require("bubblez.js");
+const fetch = require('node-fetch');
 global.BubblezClient = new bubblez.client();
 console.log('➤  '.gray + colors.gray("Bot Loading"));
 //Version Number help | (first#) Main build - (second#) How many commands hidden or not - (third#) Just up the number before pushing to git
 global.ver = "V1.14.27";
 global.footer = "Created by the Bubblez Team";
 global.config;
+global.bap;
 global.developers = [
     '200612445373464576',
     '347067975544733707',
@@ -52,6 +54,8 @@ try{
 }catch(err){
     return console.log("No config.json found")
 }
+
+bap = JSON.parse(fs.readFileSync("bap.json"));
 
 console.log('➤  '.gray + "Started loading commands".gray);
 bot.commands = new Discord.Collection();
@@ -172,6 +176,66 @@ function startCheckingGiveaways(){
     }, 3e4)
 }
 
+function checkBoostsAndPatreon(){
+    setInterval(() => {
+
+    }, 60e4);
+    bot.guilds.cache.get(config.guildid).members.cache.forEach(member => {
+        if(!bap[member.id]) bap[member.id] = [];
+        if((member.roles.cache.has(config.patreonid1) || member.roles.cache.has(config.patreonid2)) && !bap[member.id].includes("patreon")) {
+            let params = new URLSearchParams();
+            params.append('token', process.env.STOKEN);
+            params.append('patreon', true);
+            params.append('uuid', member.id);
+            fetch(`https://bubblez.app/api/v1/secure/patreon`, {
+                method: 'POST',
+                body: params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            bap[member.id].push("patreon");
+        }
+        if(member.roles.cache.has(config.boosterid) && !bap[member.id].includes("booster")) {
+            let params = new URLSearchParams();
+            params.append('token', process.env.STOKEN);
+            params.append('boost', true);
+            params.append('uuid', member.id);
+            fetch(`https://bubblez.app/api/v1/secure/boost`, {
+                method: 'POST',
+                body: params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            bap[member.id].push("booster");
+        }
+        if(!member.roles.cache.has(config.patreonid1) && !member.roles.cache.has(config.patreonid2) && bap[member.id].includes("patreon")) {
+            let params = new URLSearchParams();
+            params.append('token', process.env.STOKEN);
+            params.append('patreon', false);
+            params.append('uuid', member.id);
+            fetch(`https://bubblez.app/api/v1/secure/patreon`, {
+                method: 'POST',
+                body: params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            bap[member.id] = bap[member.id].slice(bap[member.id].indexOf("patreon"), 1);
+        }
+        if(!member.roles.cache.has(config.boosterid) && bap[member.id].includes("booster")) {
+            let params = new URLSearchParams();
+            params.append('token', process.env.STOKEN);
+            params.append('boost', false);
+            params.append('uuid', member.id);
+            fetch(`https://bubblez.app/api/v1/secure/boost`, {
+                method: 'POST',
+                body: params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            bap[member.id] = bap[member.id].slice(bap[member.id].indexOf("booster"), 1);
+        }
+    });
+    setTimeout(() => {
+        fs.writeFileSync("bap.json", JSON.stringify(bap));
+    }, 5000);
+}
+
 BubblezClient.once('ready', user => {
     console.log('✔  '.green + colors.green(`Logged into bubblez as: ${user.username}`));
 });
@@ -180,6 +244,7 @@ bot.on("ready", function(){
 	bot.user.setPresence({ activity: { name: "Loading...", type: "WATCHING" }, status: "dnd"});
     setActivity();
     startCheckingGiveaways();
+    checkBoostsAndPatreon();
     console.log('✔  '.green + colors.green(`Bot Online | ${ver}`));
 });
 
