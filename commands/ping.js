@@ -3,21 +3,13 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "ping",
-    "aliases": [
-        'p'
-    ],
     "description": "Check the ping to discord",
-    execute(message, args){
+    async execute(interaction){
         var pingEmbed = new MessageEmbed()
             .setColor("#00cc99")
             .setTitle("Ping")
-            .setDescription("Pinging...")
+            .setDescription(`Pong! ${client.ws.ping ? `The ping is ${Math.round(client.ws.ping)}ms.` : ''}`)
             .setFooter(ver);
-        message.channel.send(pingEmbed).then(pingmsg => {
-            pingEmbed.setDescription(`Pong! The message trip took ${(pingmsg.editedTimestamp || pingmsg.createdTimestamp) - (message.editedTimestamp || message.createdTimestamp)}ms. ${bot.ws.ping ? `The ping is ${Math.round(bot.ws.ping)}ms.` : ''}`);
-            setTimeout(() => {
-                pingmsg.edit(pingEmbed).catch();
-            }, 1e3);
-        });
+        interaction.reply({ embeds: [pingEmbed], ephemeral: true });
     }
 }

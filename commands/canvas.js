@@ -3,11 +3,8 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "canvas",
-    "aliases": [
-        'c'
-    ],
     "description": "Show the current canvas",
-    execute(message, args){
+    async execute(interaction){
         let canvastext = "";
         Object.keys(canvas).forEach(y => {
             Object.keys(canvas[y]).forEach(x => {
@@ -20,6 +17,6 @@ module.exports = {
         canvasEmbed.setTitle("Public Canvas");
         canvasEmbed.setColor("#00cc99");
         canvasEmbed.setFooter(ver);
-        message.channel.send(canvasEmbed);
+        interaction.reply({ embeds: [canvasEmbed] });
     }
 }

@@ -1,20 +1,8 @@
 {
-  "name": "bubblez",
-  "version": "2.0.0",
-  "description": "The Bubblez bot source code",
+  "name": "bubblez-bot",
+  "version": "1.0.0",
+  "description": "",
   "main": "index.js",
-  "dependencies": {
-    "bubblez.js": "^1.0.3",
-    "colors": "^1.4.0",
-    "cpu-stat": "^2.0.1",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "moment": "^2.29.1",
-    "moment-duration-format": "^2.3.2",
-    "ms": "^2.1.3",
-    "node-fetch": "^2.6.1",
-    "os": "^0.1.1"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,16 +10,21 @@
     "type": "git",
     "url": "git+https://github.com/ProjectBubblez/bubblez-bot.git"
   },
-  "keywords": [
-    "bubblez",
-    "bot",
-    "node",
-    "js"
-  ],
-  "author": "Bubblez.app Team (DarkMatter, SliceCraft, embed, bob5918)",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ProjectBubblez/bubblez-bot/issues"
   },
-  "homepage": "https://bubblez.app"
+  "homepage": "https://github.com/ProjectBubblez/bubblez-bot#readme",
+  "dependencies": {
+    "bubblez.js": "^1.1.1",
+    "colors": "^1.4.0",
+    "cpu-stat": "^2.0.1",
+    "discord.js": "^13.0.0",
+    "dotenv": "^10.0.0",
+    "moment": "^2.29.1",
+    "moment-duration-format": "^2.3.2",
+    "ms": "^2.1.3"
+  }
 }

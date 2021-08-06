@@ -3,18 +3,15 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "help",
-    "aliases": [
-        'h'
-    ],
     "description": "Show all commands",
-    execute(message, args){
+    async execute(interaction){
         var commandOrder = [
             'help',
             'support',
             'invite',
             'getuser',
             'canvas',
-            'publicdraw',
+            // 'publicdraw',
             'privatecanvas',
             'privatedraw',
 			'ping',
@@ -22,14 +19,14 @@ module.exports = {
         ];
         var commandlist = "";
         commandOrder.forEach(commandName => {
-            let command = bot.commands.get(commandName);
-            commandlist = commandlist + `**${prefix}${commandName}** | **${command.aliases}** '${command.description}'\n`;
+            let command = client.commands.get(commandName);
+            commandlist = commandlist + `**/${commandName}** | '${command.description}'\n`;
         });
         var Help = new MessageEmbed()
             .setColor("#00cc99")
             .setTitle("Help")
             .addField("Commands", commandlist)
             .setFooter(ver);
-        message.channel.send(Help);
+        interaction.reply({ embeds: [Help], ephemeral: true });
     }
 }

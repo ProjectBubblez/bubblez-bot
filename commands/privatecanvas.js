@@ -3,26 +3,29 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "privatecanvas",
-    "aliases": [
-        'pcanvas',
-		'pc'
-    ],
     "description": "Show your own or someone else's canvas",
-    execute(message, args){
+    "options": [
+        {
+            name: 'user',
+            description: 'The user you want to see the canvas of',
+            type: 'USER',
+        }
+    ],
+    async execute(interaction){
         let userid;
-        if(args[1]){
-            if(!Object.keys(privatecanvas).includes(args[1].replace(/[<]|[@]|[!]|[>]/g, ""))){
-                message.channel.send("This user doesn't have a canvas");
+        if(interaction.options.getUser("user")){
+            if(!Object.keys(privatecanvas).includes(interaction.options.getUser("user").id)){
+                interaction.reply({ content: "This user doesn't have a canvas", ephemeral: true });
                 return;
             }else{
-                userid = args[1].replace(/[<]|[@]|[!]|[>]/g, "");
+                userid = interaction.options.getUser("user").id;
             }
         }else{
-            if(!Object.keys(privatecanvas).includes(message.author.id)){
-                message.channel.send("You don't have a canvas");
+            if(!Object.keys(privatecanvas).includes(interaction.user.id)){
+                interaction.reply({ content: "You don't have a canvas", ephemeral: true });
                 return;
             }else{
-                userid = message.author.id;
+                userid = interaction.user.id;
             }
 
         }
@@ -33,13 +36,13 @@ module.exports = {
             })
             canvastext = canvastext + "\n";
         })
-        bot.users.fetch(userid).then(user => {
+        client.users.fetch(userid).then(user => {
             let canvasEmbed = new MessageEmbed();
             canvasEmbed.setDescription(canvastext);
             canvasEmbed.setTitle(`Private Canvas | ${user.username}`);
             canvasEmbed.setColor("#00cc99");
             canvasEmbed.setFooter(ver);
-            message.channel.send(canvasEmbed);
+            interaction.reply({ embeds: [canvasEmbed], ephemeral: true });
         });
     }
 }

@@ -8,14 +8,14 @@ const cpuStat = require("cpu-stat");
 module.exports = {
     "name": "stats",
     "description": "Bubblez Bot Stats",
-    execute(message, args){
+    async execute(interaction){
 		cpuStat.usagePercent(function(err, percent, seconds) {
 			if (err) {
 				return console.log(err);
 			}
 
 			var duration = moment
-				.duration(bot.uptime)
+				.duration(client.uptime)
 				.format(" D [days], H [hrs], m [mins], s [secs]");
 			var Stats = new MessageEmbed()
 				.setTitle("*** Stats ***")
@@ -29,7 +29,7 @@ module.exports = {
 				.addField("• Arch", `\`${os.arch()}\``, true)
 				.addField("• Platform", `\`\`${os.platform()}\`\``, true)
 				.setFooter(ver);
-			message.channel.send(Stats);
+			interaction.reply({ embeds: [Stats] });
 		});
 		
     }

@@ -3,17 +3,19 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "getuser",
-    "aliases": [
-        'gu'
-    ],
     "description": "Get info from a user on bubblez",
-    execute(message, args){
-        if(!args[1]) {
-            message.channel.send("You didn't specify a bubblez user");
-            return;
+    "options": [
+        {
+            name: 'username',
+            description: 'The username of the user you want to check',
+            type: 'STRING',
+            required: true
         }
+    ],
+    async execute(interaction){
+        await interaction.deferReply();
         let userinfo = new MessageEmbed();
-        BubblezClient.getUser(args[1]).then(user => {
+        bubblezclient.getUser(interaction.options.getString("username")).then(user => {
             let pronoun;
             if(user.pronoun == "aeaer") pronoun = "Ae/Aer";
             if(user.pronoun == "any") pronoun = "Any";
@@ -36,7 +38,7 @@ module.exports = {
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor("#00cc99");
-	        userinfo.addField("UUID", user.UUID, true);
+	        userinfo.addField("UUID", user.uuid, true);
             userinfo.addField("Username", `[${user.username}](https://bubblez.app/p?${user.username})`, true);
             userinfo.addField("Displayname", user.displayname, true);
             userinfo.addField("Pronoun", pronoun, true);
@@ -51,9 +53,9 @@ module.exports = {
             }
             userinfo.addField("Bio", `${bio ? bio : "This user does not have a bio."}`);
             userinfo.setThumbnail(user.pfp);
-            message.channel.send(userinfo);
+            interaction.editReply({ embeds: [userinfo] });
         }).catch(err => {
-            message.channel.send("User not found");
+            interaction.editReply({ content: "User not found" });
             return;
         });
     }

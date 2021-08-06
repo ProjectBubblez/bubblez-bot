@@ -2,9 +2,11 @@ const {
     MessageEmbed
 } = require("discord.js");
 const fs = require('fs');
+const ms = require('ms');
+let cooldown = {};
 module.exports = {
-    "name": "privatedraw",
-    "description": "Draw on your private canvas",
+    "name": "draw",
+    "description": "Draw on the public canvas",
     "options": [
         {
             name: 'x',
@@ -47,6 +49,17 @@ module.exports = {
         }
     ],
     async execute(interaction){
+        let time = new Date();
+        if(cooldown[interaction.user.id] == undefined){
+            cooldown[interaction.user.id] = time.getTime() + 6e4;
+        }else{
+            if(cooldown[interaction.user.id] > time.getTime()){
+                interaction.reply({ content: "This command is currently on cooldown. Try again in: " + ms(cooldown[interaction.user.id] - time.getTime()), ephemeral: true });
+                return;
+            }else{
+                cooldown[interaction.user.id] = time.getTime() + 6e4;
+            }
+        }
         if(interaction.options.getInteger("y") > 11 || interaction.options.getInteger("y") < 1) {
             interaction.reply({ content: "The max y value is 11 and the min y value is 1", ephemeral: true });
             return;
@@ -55,31 +68,20 @@ module.exports = {
             interaction.reply({ content: "The max x value is 12 and the min x value is 1", ephemeral: true });
             return;
         }
-        if(privatecanvas[interaction.user.id] == undefined){
-            privatecanvas[interaction.user.id] = {};
-            let canvasy = 11;
-            let canvasx = 12;
-            for(var y = 0; y != canvasy; y++){
-                privatecanvas[interaction.user.id][y] = {};
-                for(var x = 0; x != canvasx; x++){
-                    privatecanvas[interaction.user.id][y][x] = ":white_circle:";
-                }
-            }
-        }
-        privatecanvas[interaction.user.id][parseInt(interaction.options.getInteger("y")) - 1][parseInt(interaction.options.getInteger("x")) - 1] = `:${interaction.options.getString("color")}_circle:`;
+        canvas[parseInt(interaction.options.getInteger("y")) - 1][parseInt(interaction.options.getInteger("x")) - 1] = `:${interaction.options.getString("color")}_circle:`;
         let canvastext = "";
-        Object.keys(privatecanvas[interaction.user.id]).forEach(y => {
-            Object.keys(privatecanvas[interaction.user.id][y]).forEach(x => {
-                canvastext = canvastext + `${privatecanvas[interaction.user.id][y][x]}`;
+        Object.keys(canvas).forEach(y => {
+            Object.keys(canvas[y]).forEach(x => {
+                canvastext = canvastext + `${canvas[y][x]}`;
             })
             canvastext = canvastext + "\n";
         })
         let canvasEmbed = new MessageEmbed();
         canvasEmbed.setDescription(canvastext);
-        canvasEmbed.setTitle("Private Canvas");
+        canvasEmbed.setTitle("Public Canvas");
         canvasEmbed.setColor("#00cc99");
         canvasEmbed.setFooter(ver);
-        interaction.reply({ embeds: [canvasEmbed], ephemeral: true });
-        fs.writeFileSync('./privatecanvas.json', JSON.stringify(privatecanvas));
+        interaction.reply({ embeds:[canvasEmbed] });
+        fs.writeFileSync('./publiccanvas.json', JSON.stringify(canvas));
     }
 }

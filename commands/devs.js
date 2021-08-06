@@ -3,12 +3,8 @@ const {
 } = require("discord.js");
 module.exports = {
     "name": "devs",
-    "aliases": [
-		'dev',
-        'd'
-    ],
     "description": "Show a list of devs",
-    execute(message, args){
+    async execute(interaction){
         var DevList = "";
         developers.forEach(devID => {
             DevList = DevList + `<@${devID}>\n`
@@ -18,6 +14,6 @@ module.exports = {
             .setTitle("Developers")
             .setDescription(DevList)
             .setFooter(ver);
-        message.channel.send(Help);
+        interaction.reply({ embeds: [Help], ephemeral: true });
     }
 }
