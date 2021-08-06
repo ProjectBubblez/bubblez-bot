@@ -18,25 +18,22 @@ global.developers = [
     '476641014841475084',
     '316673724990488577'
 ];
-var activitys = [
+var activities = [
 	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
 	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
 	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' },
-    { msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
-    { msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
+    	{ msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
+	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
 	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' }
 ]
 
 setInterval(() => {
-    var msg = activitys[Math.floor(Math.random() * activitys.length)]
-    client.users.fetch(msg.suggest).then(i => {
-        if(i.username == "Bubblez"){
-            var activityss = msg.msg;
-        }else{
-            var activityss = msg.msg + " - " + i.username + "#" + i.discriminator;
-        }
-        client.user.setPresence({ activities: [{ name: activityss, type: msg.type }], status: 'online'});
-    });
+    var msg = activitys[Math.floor(Math.random() * activities.length)]
+    var activity = msg.msg;
+    if(msg.suggest != 709745787093123119) {
+	  client.users.fetch(msg.suggest).then(i => {var activity = `${activity} - ${i.username}"#"${i.discriminator}`});
+    }
+    client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online'});
 }, 15e3);
 
 if(fs.existsSync("./publiccanvas.json")){
