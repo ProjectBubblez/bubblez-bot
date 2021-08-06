@@ -28,7 +28,7 @@ var activities = [
 ]
 
 setInterval(() => {
-    var msg = activitys[Math.floor(Math.random() * activities.length)]
+    var msg = activities[Math.floor(Math.random() * activities.length)]
     var activity = msg.msg;
     if(msg.suggest != 709745787093123119) {
 	  client.users.fetch(msg.suggest).then(i => {var activity = `${activity} - ${i.username}"#"${i.discriminator}`});
