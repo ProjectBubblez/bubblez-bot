@@ -4,27 +4,24 @@ const {
 module.exports = {
     "name": "support",
     "description": "Send a request to support",
-    async execute(interaction){
-        if(!args[1]){
-            var reason = "No reason given.";
-        }else{
-            var reason = args.slice(1).join(" ");
+    "options": [
+        {
+            name: 'message',
+            description: 'The message you want to send to support',
+            type: 'STRING',
+            required: true
         }
-        let messageAttachment = message.attachments.size > 0 ? message.attachments.array()[0].url : null;
+    ],
+    async execute(interaction){
         var Support = new MessageEmbed()
             .setColor("#ff8c00")
-            .setTitle("Support | " + message.author.username + "#" + message.author.discriminator)
-            .addField("User:", "<@" + message.author.id + ">")
-            .addField("Reason:", reason)
+            .setTitle("Support | " + interaction.user.username + "#" + interaction.user.discriminator)
+            .addField("User:", "<@" + interaction.user.id + ">")
+            .addField("Reason:", interaction.options.getString("message"))
             .setTimestamp()
             .setFooter(ver);
-        if(message.channel.type == "dm"){
-            Support.addField("Channel:", "Direct message");
-        }else{
-            Support.addField("Channel:", "<#" + message.channel.id + ">");
-        }
-        if (messageAttachment) Support.setImage(messageAttachment);
-        bot.channels.cache.get(config.supportid).send(`<@&${config.staffid}>`, Support);
-        message.reply("Support message sent to staff, a staff member should be with you soon.")
+        Support.addField("Channel:", "<#" + interaction.channel.id + ">");
+        client.channels.cache.get(config.supportid).send({ content: `<@&${config.staffid}>`, embeds: [Support] });
+        interaction.reply({ content: "Message sent to support", ephemeral: true });
     }
 }

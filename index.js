@@ -18,6 +18,14 @@ global.developers = [
     '476641014841475084',
     '316673724990488577'
 ];
+
+try{
+    let rawConfig = fs.readFileSync("./config.json");
+    global.config = JSON.parse(rawConfig);
+}catch(err){
+    return console.log("No config.json found")
+}
+
 var activities = [
 	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
 	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
