@@ -22,7 +22,7 @@ var activities = [
 	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
 	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
 	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' },
-    	{ msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
+    { msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
 	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
 	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' }
 ]
@@ -90,16 +90,16 @@ client.once('ready', async () => {
                 });
                 savedcommand.permissions.set({ permissions });
             }
-            console.log(`Saved ${command.name}`);
         });
     }else{
-        console.log("false");
+        console.log("Not yet here");
     }
 	console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
 });
 
 bubblezclient.once('ready', async (user) => {
     console.log(`Logged in as: ${user.username}`);
+    startCheckingGiveaways();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -111,6 +111,90 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({ content: "Something went wrong", ephemeral: true });
     }
 });
+
+function startCheckingGiveaways(){
+    setInterval(() => {
+        let giveaways = JSON.parse(fs.readFileSync("./giveaways.json"));
+        let time = new Date();
+        Object.keys(giveaways).forEach(giveawayNumber => {
+            let giveaway = giveaways[giveawayNumber];
+            if(giveaway.winner != 0) return;
+            if(giveaway.endtime < time.getTime()){
+                client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
+                    let title = message.embeds[0].title;
+                    message.reactions.cache.get("🎉").users.fetch().then(users => {
+                        delete users[client.user.id];
+                        let newUsers = new Array;
+                        users.map(u => {
+                            if(u.id != client.user.id){
+                                newUsers.push(u.id);
+                            }
+                        });
+                        let user = newUsers[Math.floor(Math.random() * newUsers.length)];
+                        
+                        if(user){
+                            client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
+                            giveaways[giveawayNumber].winner = user;
+                            client.users.fetch(user).then((userObject) => {
+                                GiveawayEmbed = new discord.MessageEmbed();
+                                GiveawayEmbed.setFooter(ver);
+                                GiveawayEmbed.setTitle(giveaway.prize);
+                                let GiveawayEndTime = new Date(giveaway.endtime);
+                                GiveawayEmbed.setDescription(`Giveaway ended!\nWinner: <@${userObject.id}>`);
+                                GiveawayEmbed.setColor("#cc0000");
+                                GiveawayEmbed.setTimestamp(GiveawayEndTime);
+                                message.edit(GiveawayEmbed);
+                                bubblezclient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways" });
+							    console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
+                            })
+                        }else{
+                            client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
+                            giveaways[giveawayNumber].winner = 1;
+                            GiveawayEmbed = new discord.MessageEmbed();
+                            GiveawayEmbed.setFooter(ver);
+                            GiveawayEmbed.setTitle(giveaway.prize);
+                            let GiveawayEndTime = new Date(giveaway.endtime);
+                            GiveawayEmbed.setDescription(`Giveaway ended!\nNo-one won :(`);
+                            GiveawayEmbed.setColor("#cc0000");
+                            GiveawayEmbed.setTimestamp(GiveawayEndTime);
+                            message.edit(GiveawayEmbed);
+							console.log(`None won the giveaway`);
+                        }
+                        fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
+                    })
+                }).catch(() => {
+                    return;
+                });
+            }else{
+                client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
+                    GiveawayEmbed = new discord.MessageEmbed();
+                    GiveawayEmbed.setFooter(ver);
+                    GiveawayEmbed.setTitle(giveaway.prize);
+                    let GiveawayEndTime = new Date(giveaway.endtime);
+                    let endtimeinms = GiveawayEndTime.getTime() - time.getTime();
+                    let timeRemaining = "";
+                    if(endtimeinms > 86400000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 86400000) + " days "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 86400000) * 86400000);
+                    }
+                    if(endtimeinms > 3600000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 3600000) + " hours "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 3600000) * 3600000);
+                    }
+                    if(endtimeinms > 60000){
+                        timeRemaining = timeRemaining + Math.floor(endtimeinms / 60000) + " minutes "
+                        endtimeinms = endtimeinms - (Math.floor(endtimeinms / 60000) * 60000);
+                    }
+                    timeRemaining = timeRemaining + Math.floor(endtimeinms / 1000) + " seconds "
+                    endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
+                    GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
+                    GiveawayEmbed.setColor("#00cc99");
+                    message.edit(GiveawayEmbed);
+                });
+            }
+        })
+    }, 15e3)
+}
 
 client.login(process.env.DTOKEN);
 bubblezclient.login(process.env.BTOKEN);

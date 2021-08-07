@@ -1,5 +1,7 @@
 const {
-    MessageEmbed
+    MessageEmbed,
+    MessageActionRow,
+    MessageButton
 } = require("discord.js");
 module.exports = {
     "name": "getuser",
@@ -16,6 +18,13 @@ module.exports = {
         await interaction.deferReply();
         let userinfo = new MessageEmbed();
         bubblezclient.getUser(interaction.options.getString("username")).then(user => {
+            const row = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setLabel('See profile')
+					.setStyle('LINK')
+                    .setURL(`https://bubblez.app/p?${user.username}`),
+			);
             let pronoun;
             if(user.pronoun == "aeaer") pronoun = "Ae/Aer";
             if(user.pronoun == "any") pronoun = "Any";
@@ -39,7 +48,7 @@ module.exports = {
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor("#00cc99");
 	        userinfo.addField("UUID", user.uuid, true);
-            userinfo.addField("Username", `[${user.username}](https://bubblez.app/p?${user.username})`, true);
+            userinfo.addField("Username", `${user.username}`, true);
             userinfo.addField("Displayname", user.displayname, true);
             userinfo.addField("Pronoun", pronoun, true);
             userinfo.addField("Rank", `${user.rank ? user.rank : "user"}`, true);
@@ -53,7 +62,7 @@ module.exports = {
             }
             userinfo.addField("Bio", `${bio ? bio : "This user does not have a bio."}`);
             userinfo.setThumbnail(user.pfp);
-            interaction.editReply({ embeds: [userinfo] });
+            interaction.editReply({ embeds: [userinfo], components: [row] });
         }).catch(err => {
             interaction.editReply({ content: "User not found" });
             return;
