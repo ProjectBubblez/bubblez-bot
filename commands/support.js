@@ -1,5 +1,7 @@
 const {
-    MessageEmbed
+    MessageEmbed,
+    MessageActionRow,
+    MessageButton
 } = require("discord.js");
 module.exports = {
     "name": "support",
@@ -13,6 +15,13 @@ module.exports = {
         }
     ],
     async execute(interaction){
+		const row = new MessageActionRow()
+		.addComponents(
+			new MessageButton()
+				.setLabel('Server Invite')
+				.setStyle('LINK')
+				.setURL(`https://discord.gg/Agg8huj`),
+		);
         var Support = new MessageEmbed()
             .setColor("#ff8c00")
             .setTitle("Support | " + interaction.user.username + "#" + interaction.user.discriminator)
@@ -22,6 +31,6 @@ module.exports = {
             .setFooter(ver);
         Support.addField("Channel:", "<#" + interaction.channel.id + ">");
         client.channels.cache.get(config.supportid).send({ content: `<@&${config.staffid}>`, embeds: [Support] });
-        interaction.reply({ content: "Message sent to support", ephemeral: true });
+        interaction.reply({ content: "Message sent to support", ephemeral: true, components: [row] });
     }
 }
