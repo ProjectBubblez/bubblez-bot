@@ -49,6 +49,7 @@ module.exports = {
 	        userinfo.addField("UUID", user.uuid, true);
             userinfo.addField("Username", `${user.username}`, true);
             userinfo.addField("Displayname", user.displayname, true);
+			userinfo.addField("Followers", user.followers.toString(), true);
             userinfo.addField("Pronoun", pronoun, true);
             userinfo.addField("Rank", `${user.rank ? user.rank : "user"}`, true);
             userinfo.addField("Coins", user.coins, true);
