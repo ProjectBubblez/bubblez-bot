@@ -4,7 +4,8 @@ const bubblez = require("bubblez.js");
 bubblezclient = new bubblez.Client({
     default: {
         from: "Bubblez Bot"
-    }
+    },
+	verbose: true
 });
 const fs = require("fs");
 const colors = require('colors');
