@@ -11,7 +11,7 @@ const fs = require("fs");
 const colors = require('colors');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.28`;
+global.ver = `V2.${fs.readdirSync("./commands/").length}.29`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
