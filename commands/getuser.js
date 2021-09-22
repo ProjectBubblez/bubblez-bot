@@ -51,7 +51,7 @@ module.exports = {
             userinfo.addField("Displayname", user.displayname, true);
 			userinfo.addField("Followers", user.followers.toString(), true);
             userinfo.addField("Pronoun", pronoun, true);
-            userinfo.addField("Rank", `${user.rank ? user.rank : "user"}`, true);
+            userinfo.addField("Rank", `${user.rank ? `${user.rank.charAt(0).toUpperCase()}${user.rank.slice(1)}` : "User"}`, true);
             userinfo.addField("Coins", user.coins, true);
             userinfo.setFooter(ver);
             let bio;
