@@ -11,13 +11,19 @@ const fs = require("fs");
 const colors = require('colors');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.29`;
+global.ver = `V2.${fs.readdirSync("./commands/").length}.30`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
     '347067975544733707',
     '476641014841475084',
     '316673724990488577'
+];
+global.devservers = [
+    '806672125602824232',
+    '408750138526269451',
+    '869931517772693555',
+    '477610391023779841'
 ];
 
 try{
@@ -87,7 +93,31 @@ client.once('ready', async () => {
                 options: command.options,
                 defaultPermission: !command.developerOnly
             };
-            let savedcommand = await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
+            global.savedcommand = await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
+            if(command.developerOnly == true){
+                let permissions = [];
+                developers.forEach(developer => {
+                    permissions.push({
+                        id: developer,
+                        type: 'USER',
+                        permission: true
+                    });
+                });
+                savedcommand.permissions.set({ permissions });
+            }
+            global.savedcommand = await (client.guilds.cache.get('408750138526269451') ?? await client.guilds.fetch('408750138526269451')).commands.create(data);
+            if(command.developerOnly == true){
+                let permissions = [];
+                developers.forEach(developer => {
+                    permissions.push({
+                        id: developer,
+                        type: 'USER',
+                        permission: true
+                    });
+                });
+                savedcommand.permissions.set({ permissions });
+            }
+            global.savedcommand = await (client.guilds.cache.get('869931517772693555') ?? await client.guilds.fetch('869931517772693555')).commands.create(data);
             if(command.developerOnly == true){
                 let permissions = [];
                 developers.forEach(developer => {
@@ -103,7 +133,7 @@ client.once('ready', async () => {
     }else{
         console.log("Not yet here");
     }
-	console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
+    console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
 });
 
 bubblezclient.once('ready', async (user) => {
