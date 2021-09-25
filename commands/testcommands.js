@@ -6,6 +6,7 @@ const {
 module.exports = {
     "name": "testcommand",
     "description": "this command will be used for many testings of things",
+    "developerOnly": true,
     //"options": [
         //{
             //name: 'username',
