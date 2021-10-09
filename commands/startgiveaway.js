@@ -142,7 +142,7 @@ module.exports = {
                     "winner": 0
                 };
                 fs.writeFileSync(__dirname + "/../giveaways.json", JSON.stringify(Giveaways));
-				bubblezclient.send(`New giveaway started\nPrize ${interaction.options.getString('prize')}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways" });
+				bubblezclient.send(`New giveaway started\nPrize ${interaction.options.getString('prize')}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways", locked: true });
                 interaction.reply({ content: "Giveaway started", ephemeral: true });
             });
         }

@@ -11,7 +11,7 @@ const fs = require("fs");
 const colors = require('colors');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.30`;
+global.ver = `V2.${fs.readdirSync("./commands/").length}.31`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -181,7 +181,7 @@ function startCheckingGiveaways(){
                                 GiveawayEmbed.setDescription(`Giveaway ended!\nWinner: <@${userObject.id}>`);
                                 GiveawayEmbed.setColor("#cc0000");
                                 GiveawayEmbed.setTimestamp(GiveawayEndTime);
-                                message.edit(GiveawayEmbed);
+                                message.edit({ embeds: [GiveawayEmbed] });
                                 bubblezclient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways", locked: true });
 							    console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
@@ -195,7 +195,7 @@ function startCheckingGiveaways(){
                             GiveawayEmbed.setDescription(`Giveaway ended!\nNo-one won :(`);
                             GiveawayEmbed.setColor("#cc0000");
                             GiveawayEmbed.setTimestamp(GiveawayEndTime);
-                            message.edit(GiveawayEmbed);
+                            message.edit({ embeds: [GiveawayEmbed] });
 							console.log(`None won the giveaway`);
                         }
                         fs.writeFileSync("./giveaways.json", JSON.stringify(giveaways));
@@ -227,7 +227,7 @@ function startCheckingGiveaways(){
                     endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
                     GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
                     GiveawayEmbed.setColor("#00cc99");
-                    message.edit(GiveawayEmbed);
+                    message.edit({ embeds: [GiveawayEmbed] });
                 });
             }
         })
