@@ -70,6 +70,12 @@ if(fs.existsSync("./privatecanvas.json")){
     global.privatecanvas = {};
 }
 
+if(fs.existsSync("./giveaways.json")){
+    global.privatecanvas = JSON.parse(fs.readFileSync("./giveaways.json"));
+}else{
+    global.privatecanvas = {};
+}
+
 console.log('➤  '.gray + "Started loading commands".gray);
 client.commands = new discord.Collection();
 let commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith('.js'));
