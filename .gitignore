@@ -1,6 +1,6 @@
 .env
 node_modules/
 .vscode/settings.json
-publiccanvas.json
 privatecanvas.json
 giveaways.json
+publiccanvas.json
