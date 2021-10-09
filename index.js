@@ -16,8 +16,7 @@ global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
     '347067975544733707',
-    '476641014841475084',
-    '316673724990488577'
+    '476641014841475084'
 ];
 global.devservers = [
     '806672125602824232',
@@ -183,7 +182,7 @@ function startCheckingGiveaways(){
                                 GiveawayEmbed.setColor("#cc0000");
                                 GiveawayEmbed.setTimestamp(GiveawayEndTime);
                                 message.edit(GiveawayEmbed);
-                                bubblezclient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways" });
+                                bubblezclient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways", locked: true });
 							    console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
                         }else{
