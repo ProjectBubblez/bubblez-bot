@@ -71,9 +71,9 @@ if(fs.existsSync("./privatecanvas.json")){
 }
 
 if(fs.existsSync("./giveaways.json")){
-    global.privatecanvas = JSON.parse(fs.readFileSync("./giveaways.json"));
+    global.giveaways = JSON.parse(fs.readFileSync("./giveaways.json"));
 }else{
-    global.privatecanvas = {};
+    global.giveaways = {};
 }
 
 console.log('➤  '.gray + "Started loading commands".gray);
