@@ -110,6 +110,9 @@ client.once('ready', async () => {
                 });
                 savedcommand.permissions.set({ permissions });
             }
+        if(config.dev == true){
+
+        }else{
             global.savedcommand = await (client.guilds.cache.get('408750138526269451') ?? await client.guilds.fetch('408750138526269451')).commands.create(data);
             if(command.developerOnly == true){
                 let permissions = [];
@@ -134,6 +137,7 @@ client.once('ready', async () => {
                 });
                 savedcommand.permissions.set({ permissions });
             }
+        }
         });
     }else{
         console.log("Not yet here");
