@@ -110,9 +110,29 @@ client.once('ready', async () => {
                 });
                 savedcommand.permissions.set({ permissions });
             }
-        if(config.dev == true){
-
-        }else{
+        });
+    }else{
+        client.commands.forEach(async (command) => {
+            if(!command.options) command.options = [];
+            if(!command.developerOnly) command.developerOnly = false;
+            let data = {
+                name: command.name,
+                description: command.description,
+                options: command.options,
+                defaultPermission: !command.developerOnly
+            };
+            global.savedcommand = await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
+            if(command.developerOnly == true){
+                let permissions = [];
+                developers.forEach(developer => {
+                    permissions.push({
+                        id: developer,
+                        type: 'USER',
+                        permission: true
+                    });
+                });
+                savedcommand.permissions.set({ permissions });
+            }
             global.savedcommand = await (client.guilds.cache.get('408750138526269451') ?? await client.guilds.fetch('408750138526269451')).commands.create(data);
             if(command.developerOnly == true){
                 let permissions = [];
@@ -137,10 +157,7 @@ client.once('ready', async () => {
                 });
                 savedcommand.permissions.set({ permissions });
             }
-        }
         });
-    }else{
-        console.log("Not yet here");
     }
     console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
 });
