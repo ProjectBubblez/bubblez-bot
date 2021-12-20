@@ -38,7 +38,8 @@ var activities = [
 	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' },
     { msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
 	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
-	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' }
+	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' },
+    { msg: 'Bubblez Champs', suggest: '709745787093123119', type: 5 }
 ]
 
 setInterval(() => {
