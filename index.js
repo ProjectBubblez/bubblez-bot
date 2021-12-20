@@ -42,13 +42,30 @@ var activities = [
     { msg: 'Bubblez Champs', suggest: '709745787093123119', type: 5 }
 ]
 
+// setInterval(() => {
+//     var msg = activities[Math.floor(Math.random() * activities.length)]
+//     var activity = msg.msg;
+//     if(msg.suggest != 709745787093123119) {
+// 	  client.users.fetch(msg.suggest).then(i => {var activity = `${activity} - ${i.username}"#"${i.discriminator}`});
+//     }
+//     client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online'});
+// }, 15e3);
+
 setInterval(() => {
     var msg = activities[Math.floor(Math.random() * activities.length)]
-    var activity = msg.msg;
-    if(msg.suggest != 709745787093123119) {
-	  client.users.fetch(msg.suggest).then(i => {var activity = `${activity} - ${i.username}"#"${i.discriminator}`});
-    }
-    client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online'});
+    client.users.fetch(msg.suggest).then(i => {
+    
+        var activity = msg.msg;
+    
+        if(msg.suggest != 709745787093123119) {
+	        var activity = `${activity} - ${i.username}"#"${i.discriminator}`;
+        }else{
+            var activity = activity;
+        }
+        
+        client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online'});
+
+    });
 }, 15e3);
 
 if(fs.existsSync("./publiccanvas.json")){
