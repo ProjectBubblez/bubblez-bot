@@ -11,7 +11,7 @@ const fs = require("fs");
 const colors = require('colors');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.31`;
+global.ver = `V2.${fs.readdirSync("./commands/").length}.32`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -22,7 +22,8 @@ global.devservers = [
     '806672125602824232',
     '408750138526269451',
     '869931517772693555',
-    '477610391023779841'
+    '477610391023779841',
+    '829789629519626260'
 ];
 
 try{
@@ -164,6 +165,18 @@ client.once('ready', async () => {
                 savedcommand.permissions.set({ permissions });
             }
             global.savedcommand = await (client.guilds.cache.get('869931517772693555') ?? await client.guilds.fetch('869931517772693555')).commands.create(data);
+            if(command.developerOnly == true){
+                let permissions = [];
+                developers.forEach(developer => {
+                    permissions.push({
+                        id: developer,
+                        type: 'USER',
+                        permission: true
+                    });
+                });
+                savedcommand.permissions.set({ permissions });
+            }
+            global.savedcommand = await (client.guilds.cache.get('829789629519626260') ?? await client.guilds.fetch('829789629519626260')).commands.create(data);
             if(command.developerOnly == true){
                 let permissions = [];
                 developers.forEach(developer => {
