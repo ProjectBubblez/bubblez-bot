@@ -26,12 +26,23 @@ global.devservers = [
     '829789629519626260'
 ];
 
+
+// client.on('ready', () => {
+//     console.log(`${client.user.tag} is online!`.green);
+//     console.log(`${client.guilds.cache.size} servers!`.green);
+//     console.log(`${client.users.cache.size} users!`.green);
+//     console.log(`${client.channels.cache.size} channels!`.green);
+//     console.log(`${client.guilds.cache.filter(g => g.available).size} servers are available!`.green);
+//     console.log(`${client.guilds.cache.filter(g => !g.available).size} servers are unavailable!`.green);
+// });
+
 try{
     let rawConfig = fs.readFileSync("./config.json");
     global.config = JSON.parse(rawConfig);
 }catch(err){
     return console.log("No config.json found")
 }
+
 
 var activities = [
 	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
