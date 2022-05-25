@@ -43,6 +43,11 @@ module.exports = {
             if(user.pronoun == "xexem") pronoun = "Xe/Xem";
             if(user.pronoun == "ziehir") pronoun = "Zie/Hir";
             if(user.pronoun == "none") pronoun = "None";
+            var badges = "";
+            JSON.parse(user.rank).forEach(rank => {
+                badges += `${rank.charAt(0).toUpperCase()}${rank.slice(1)}\n`;
+            });
+            if(badges == "") badges = "User";
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor("#00cc99");
@@ -51,7 +56,7 @@ module.exports = {
             userinfo.addField("Displayname", user.displayname, true);
 			userinfo.addField("Followers", user.followers.toString(), true);
             userinfo.addField("Pronoun", pronoun, true);
-            userinfo.addField("Rank", `${user.rank ? `${user.rank.charAt(0).toUpperCase()}${user.rank.slice(1)}` : "User"}`, true);
+            userinfo.addField("Badges", badges, true);
             userinfo.addField("Coins", user.coins, true);
             userinfo.setFooter(ver);
             let bio;
@@ -64,6 +69,7 @@ module.exports = {
             userinfo.setThumbnail(user.pfp);
             interaction.editReply({ embeds: [userinfo], components: [row] });
         }).catch(err => {
+            console.log(err);
             interaction.editReply({ content: "User not found" });
             return;
         });
