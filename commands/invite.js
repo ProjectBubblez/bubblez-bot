@@ -6,7 +6,6 @@ const {
 module.exports = {
     "name": "invite",
     "description": "Invite link",
-    "developerOnly": true,
     async execute(interaction){
 		const row = new MessageActionRow()
 		.addComponents(

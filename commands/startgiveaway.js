@@ -5,7 +5,6 @@ const fs = require('fs');
 module.exports = {
     "name": "startgiveaway",
     "description": "Start a giveaway",
-    "developerOnly": true,
     "options": [
         {
             name: 'channel',
@@ -25,6 +24,10 @@ module.exports = {
         },
     ],
     async execute(interaction){
+        if(!developers.includes(interaction.user.id)) {
+            interaction.reply({ content: "You don't have permission to run this command", ephemeral: true });
+            return;
+        }
         if(interaction.options.getChannel('channel').type != "GUILD_TEXT"){
             interaction.reply({ content: "This channel is not a text channel", ephemeral: true });
             return;
@@ -105,7 +108,7 @@ module.exports = {
             }
             timeArgs = !isNaN(giveawayDays) + !isNaN(giveawayHours) + !isNaN(giveawayMinutes)
             if(isNaN(giveawayDays) && isNaN(giveawayHours) && isNaN(giveawayMinutes)){
-                message.channel.send("You gave me a wrong format, example: 30d 15h 20m");
+                interaction.reply({ content: "You gave me a wrong format, example: 30d 15h 20m", ephemeral: true });
                 return;
             }
             GiveawayEmbed = new MessageEmbed();

@@ -9,6 +9,9 @@ bubblezclient = new bubblez.Client({
 });
 const fs = require("fs");
 const colors = require('colors');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
 global.ver = `V2.${fs.readdirSync("./commands/").length}.32`;
@@ -116,6 +119,129 @@ commandFiles.forEach(commandName => {
 })
 console.log('➤  '.gray + "Finished loading commands".gray);
 
+async function refreshSlashCommands(){
+    function setStandardOptions(baseoption, optiondata){
+        baseoption.setName(optiondata.name);
+        baseoption.setDescription(optiondata.description);
+        baseoption.setRequired(optiondata.required ?? false);
+        return baseoption;
+    }
+    const slashcollection = [];
+    client.commands.forEach(command => {
+        const slashcommand = new SlashCommandBuilder()
+            .setName(command.name)
+            .setDescription(command.description ?? utility.getText("english", command.name, "commandDescription"));
+        if(command.options) command.options.forEach(option => {
+            if(option.type == "USER"){
+                slashcommand.addUserOption(useroption => {
+                    return setStandardOptions(useroption, option);
+                });
+            }else if(option.type == "STRING"){
+                slashcommand.addStringOption(stringoption => {
+                    return setStandardOptions(stringoption, option);
+                });
+            }else if(option.type == "CHANNEL"){
+                slashcommand.addChannelOption(channeloption => {
+                    return setStandardOptions(channeloption, option);
+                });
+            }else if(option.type == "INTEGER"){
+                slashcommand.addIntegerOption(integeroption => {
+                    return setStandardOptions(integeroption, option);
+                });
+            }else if(option.type == "USER"){
+                slashcommand.addUserOption(useroption => {
+                    return setStandardOptions(useroption, option);
+                });
+            }else if(option.type == "ROLE"){
+                slashcommand.addRoleOption(roleoption => {
+                    return setStandardOptions(roleoption, option);
+                });
+            }else if(option.type == "SUB_COMMAND"){
+                return slashcommand.addSubcommand(subcommand => {
+                    subcommand.setName(option.name);
+                    subcommand.setDescription(option.description);
+                    option.options.forEach(option => {
+                        if(option.type == "USER"){
+                            subcommand.addUserOption(useroption => {
+                                return setStandardOptions(useroption, option);
+                            });
+                        }else if(option.type == "STRING"){
+                            subcommand.addStringOption(stringoption => {
+                                return setStandardOptions(stringoption, option);
+                            });
+                        }else if(option.type == "CHANNEL"){
+                            subcommand.addChannelOption(channeloption => {
+                                return setStandardOptions(channeloption, option);
+                            });
+                        }else if(option.type == "INTEGER"){
+                            subcommand.addIntegerOption(integeroption => {
+                                return setStandardOptions(integeroption, option);
+                            });
+                        }else if(option.type == "USER"){
+                            subcommand.addUserOption(useroption => {
+                                return setStandardOptions(useroption, option);
+                            });
+                        }else if(option.type == "ROLE"){
+                            subcommand.addRoleOption(roleoption => {
+                                return setStandardOptions(roleoption, option);
+                            });
+                        }
+                    });
+                    return subcommand;
+                });
+            }else if(option.type == "SUB_COMMAND_GROUP"){
+                return slashcommand.addSubcommandGroup(subcommandgroup => {
+                    subcommandgroup.setName(option.name);
+                    subcommandgroup.setDescription(option.description);
+                    option.options.forEach(option => {
+                        return subcommandgroup.addSubcommand(subcommand => {
+                            subcommand.setName(option.name);
+                            subcommand.setDescription(option.description);
+                            option.options.forEach(option => {
+                                if(option.type == "USER"){
+                                    subcommand.addUserOption(useroption => {
+                                        return setStandardOptions(useroption, option);
+                                    });
+                                }else if(option.type == "STRING"){
+                                    subcommand.addStringOption(stringoption => {
+                                        return setStandardOptions(stringoption, option);
+                                    });
+                                }else if(option.type == "CHANNEL"){
+                                    subcommand.addChannelOption(channeloption => {
+                                        return setStandardOptions(channeloption, option);
+                                    });
+                                }else if(option.type == "INTEGER"){
+                                    subcommand.addIntegerOption(integeroption => {
+                                        return setStandardOptions(integeroption, option);
+                                    });
+                                }else if(option.type == "USER"){
+                                    subcommand.addUserOption(useroption => {
+                                        return setStandardOptions(useroption, option);
+                                    });
+                                }else if(option.type == "ROLE"){
+                                    subcommand.addRoleOption(roleoption => {
+                                        return setStandardOptions(roleoption, option);
+                                    });
+                                }
+                            });
+                            return subcommand;
+                        });
+                    });
+                    return subcommandgroup;
+                });
+            }
+        });
+        slashcollection.push(slashcommand);
+    });
+    const rest = new REST({ version: '9' }).setToken(process.env.DTOKEN);
+    console.log("Refreshing slash commands");
+    await rest.put(
+        Routes.applicationCommands(client.user.id),
+        { body: slashcollection },
+    );
+    console.log("Refreshed slash commands");
+};
+
 client.once('ready', async () => {
     if (!client.application?.owner) await client.application?.fetch();
     if(process.env.DEBUG == "true"){
@@ -128,78 +254,10 @@ client.once('ready', async () => {
                 options: command.options,
                 defaultPermission: !command.developerOnly
             };
-            global.savedcommand = await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
-            if(command.developerOnly == true){
-                let permissions = [];
-                developers.forEach(developer => {
-                    permissions.push({
-                        id: developer,
-                        type: 'USER',
-                        permission: true
-                    });
-                });
-                savedcommand.permissions.set({ permissions });
-            }
+            await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
         });
     }else{
-        client.commands.forEach(async (command) => {
-            if(!command.options) command.options = [];
-            if(!command.developerOnly) command.developerOnly = false;
-            let data = {
-                name: command.name,
-                description: command.description,
-                options: command.options,
-                defaultPermission: !command.developerOnly
-            };
-            global.savedcommand = await (client.guilds.cache.get('806672125602824232') ?? await client.guilds.fetch('806672125602824232')).commands.create(data);
-            if(command.developerOnly == true){
-                let permissions = [];
-                developers.forEach(developer => {
-                    permissions.push({
-                        id: developer,
-                        type: 'USER',
-                        permission: true
-                    });
-                });
-                savedcommand.permissions.set({ permissions });
-            }
-            global.savedcommand = await (client.guilds.cache.get('408750138526269451') ?? await client.guilds.fetch('408750138526269451')).commands.create(data);
-            if(command.developerOnly == true){
-                let permissions = [];
-                developers.forEach(developer => {
-                    permissions.push({
-                        id: developer,
-                        type: 'USER',
-                        permission: true
-                    });
-                });
-                savedcommand.permissions.set({ permissions });
-            }
-            global.savedcommand = await (client.guilds.cache.get('869931517772693555') ?? await client.guilds.fetch('869931517772693555')).commands.create(data);
-            if(command.developerOnly == true){
-                let permissions = [];
-                developers.forEach(developer => {
-                    permissions.push({
-                        id: developer,
-                        type: 'USER',
-                        permission: true
-                    });
-                });
-                savedcommand.permissions.set({ permissions });
-            }
-            global.savedcommand = await (client.guilds.cache.get('829789629519626260') ?? await client.guilds.fetch('829789629519626260')).commands.create(data);
-            if(command.developerOnly == true){
-                let permissions = [];
-                developers.forEach(developer => {
-                    permissions.push({
-                        id: developer,
-                        type: 'USER',
-                        permission: true
-                    });
-                });
-                savedcommand.permissions.set({ permissions });
-            }
-        });
+        refreshSlashCommands();
     }
     console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
 });

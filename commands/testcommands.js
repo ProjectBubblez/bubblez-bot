@@ -6,7 +6,6 @@ const {
 module.exports = {
     "name": "testcommand",
     "description": "this command will be used for many testings of things",
-    "developerOnly": true,
     //"options": [
         //{
             //name: 'username',
@@ -16,6 +15,10 @@ module.exports = {
         //}
     //],
     async execute(interaction){
+        if(!developers.includes(interaction.user.id)) {
+            interaction.reply({ content: "You don't have permission to run this command", ephemeral: true });
+            return;
+        }
         await interaction.deferReply();
         let userinfo = new MessageEmbed();
             const row = new MessageActionRow()
