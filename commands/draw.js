@@ -10,13 +10,13 @@ module.exports = {
     "options": [
         {
             name: 'x',
-            description: 'The x position you want to draw at (min: 1, max: 11)',
+            description: 'The x (across) position you want to draw at (min: 1, max: 11)',
             type: 'INTEGER',
             required: true
         },
         {
             name: 'y',
-            description: 'The y position you want to draw at (min: 1, max: 12)',
+            description: 'The y (down) position you want to draw at (min: 1, max: 12)',
             type: 'INTEGER',
             required: true
         },
