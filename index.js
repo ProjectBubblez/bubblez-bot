@@ -14,7 +14,7 @@ const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.32`;
+global.ver = `V2.${fs.readdirSync("./commands/").length}.35`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
