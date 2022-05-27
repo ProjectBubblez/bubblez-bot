@@ -41,7 +41,7 @@ module.exports = {
             canvasEmbed.setDescription(canvastext);
             canvasEmbed.setTitle(`Private Canvas | ${user.username}`);
             canvasEmbed.setColor("#00cc99");
-            canvasEmbed.setFooter(ver);
+            canvasEmbed.setFooter(ver+" | x: across the canvas, y: down the canvas");
             interaction.reply({ embeds: [canvasEmbed], ephemeral: true });
         });
     }
