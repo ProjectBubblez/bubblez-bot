@@ -1,24 +1,25 @@
 const {
-    MessageEmbed,
-    MessageActionRow,
-    MessageButton
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
 } = require("discord.js");
 module.exports = {
     "name": "invite",
     "description": "Invite link",
     async execute(interaction){
-		const row = new MessageActionRow()
+		const row = new ActionRowBuilder()
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel('Invite')
-				.setStyle('LINK')
+				.setStyle(ButtonStyle.Link)
 				.setURL(`https://discord.com/api/oauth2/authorize?client_id=709745787093123119&permissions=8&scope=bot`),
 		);
-        var Inv = new MessageEmbed()
+        var Inv = new EmbedBuilder()
             .setColor("#00cc99")
             .setTitle("Invite")
             .setDescription("Thank you for inviting the bot to your server.")
-            .setFooter(ver);
+            .setFooter({ text: ver });
         interaction.reply({ embeds: [Inv], ephemeral: true, components: [row] });
     }
 }

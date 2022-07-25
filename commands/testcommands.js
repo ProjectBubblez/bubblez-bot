@@ -1,7 +1,9 @@
 const {
-    MessageEmbed,
-    MessageActionRow,
-    MessageButton
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ApplicationCommandOptionType
 } = require("discord.js");
 module.exports = {
     "name": "testcommand",
@@ -10,7 +12,7 @@ module.exports = {
         //{
             //name: 'username',
             //description: 'The username of the user you want to check',
-            //type: 'STRING',
+            //type: ApplicationCommandOptionType.String,
             //required: true
         //}
     //],
@@ -20,12 +22,12 @@ module.exports = {
             return;
         }
         await interaction.deferReply();
-        let userinfo = new MessageEmbed();
-            const row = new MessageActionRow()
+        let userinfo = new EmbedBuilder();
+            const row = new ActionRowBuilder()
 			.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 					.setLabel('Website')
-					.setStyle('LINK')
+					.setStyle(ButtonStyle.Link)
                     .setURL(`https://bubblez.app/home`),
 			);
 			userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");

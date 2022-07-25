@@ -1,5 +1,7 @@
 const {
-    MessageEmbed
+    EmbedBuilder,
+    ApplicationCommandOptionType,
+    ChannelType
 } = require("discord.js");
 const fs = require('fs');
 module.exports = {
@@ -9,29 +11,35 @@ module.exports = {
         {
             name: 'channel',
             description: 'The channel the giveaway needs to be started in',
-            type: 'CHANNEL',
+            type: ApplicationCommandOptionType.Channel,
+            channel_types: [ChannelType.GuildText, ChannelType.GuildNews],
             required: true
         },{
             name: 'prize',
             description: 'The prize you are giving away',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             required: true
         },{
             name: 'length',
             description: 'How long will the giveaway take (Example: 30d 20h 15m)',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             required: true
-        },
+        },{
+            name: 'ping',
+            description: 'Do you want to ping everyone on the server with @everyone?',
+            type: ApplicationCommandOptionType.Boolean,
+            required: false
+        }
     ],
     async execute(interaction){
         if(!developers.includes(interaction.user.id)) {
             interaction.reply({ content: "You don't have permission to run this command", ephemeral: true });
             return;
         }
-        if(interaction.options.getChannel('channel').type != "GUILD_TEXT"){
-            interaction.reply({ content: "This channel is not a text channel", ephemeral: true });
-            return;
-        }
+        // if(interaction.options.getChannel('channel').type !== ChannelType.GuildText || interaction.options.getChannel('channel').type !== ChannelType.GuildNews) {
+        //     interaction.reply({ content: "This channel is not a text channel", ephemeral: true });
+        //     return;
+        // }
         function endsWithAny(string, endArray){
             if(string == undefined) return false;
             let answer = false;
@@ -111,8 +119,8 @@ module.exports = {
                 interaction.reply({ content: "You gave me a wrong format, example: 30d 15h 20m", ephemeral: true });
                 return;
             }
-            GiveawayEmbed = new MessageEmbed();
-            GiveawayEmbed.setFooter(ver);
+            GiveawayEmbed = new EmbedBuilder();
+            GiveawayEmbed.setFooter({ text: ver });
             GiveawayEmbed.setTitle(interaction.options.getString('prize'));
             let GiveawayEndTime = new Date(giveawayEnd);
             let endtimeinms = GiveawayEndTime.getTime() - time.getTime();
@@ -133,7 +141,7 @@ module.exports = {
             endtimeinms = endtimeinms - (Math.floor(endtimeinms / 1000) * 1000);
             GiveawayEmbed.setDescription(`:partying_face: Giveaway!\nParticipate by pressing :tada:\nTime remaining: **${timeRemaining}**`);
             GiveawayEmbed.setColor("#00cc99");
-            interaction.options.getChannel('channel').send({ embeds: [GiveawayEmbed] }).then(message => {
+            interaction.options.getChannel('channel').send({ content: (interaction.options.getBoolean('ping') == true) ? "@everyone" : null , embeds: [GiveawayEmbed] }).then(message => {
                 message.react("🎉");
                 let Giveaways = JSON.parse(fs.readFileSync(__dirname + "/../giveaways.json"));
                 Giveaways[Object.keys(Giveaways).length] = {
@@ -141,11 +149,12 @@ module.exports = {
                     "channelid": interaction.options.getChannel('channel').id,
                     "messageid": message.id,
                     "prize": interaction.options.getString('prize'),
+                    "ping": interaction.options.getBoolean('ping'),
                     "endtime": giveawayEnd,
                     "winner": 0
                 };
                 fs.writeFileSync(__dirname + "/../giveaways.json", JSON.stringify(Giveaways));
-				bubblezclient.send(`New giveaway started\nPrize ${interaction.options.getString('prize')}\nhttps://discord.gg/Agg8huj in channel #giveaways`, { from: "Giveaways", locked: true });
+				bubblezclient.send(`New giveaway started\nPrize ${interaction.options.getString('prize')}\nhttps://discord.gg/Bubblez in channel #giveaways`, { from: "Giveaways", locked: true });
                 interaction.reply({ content: "Giveaway started", ephemeral: true });
             });
         }

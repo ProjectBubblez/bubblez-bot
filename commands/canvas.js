@@ -1,5 +1,5 @@
 const {
-    MessageEmbed
+    EmbedBuilder
 } = require("discord.js");
 module.exports = {
     "name": "canvas",
@@ -12,11 +12,11 @@ module.exports = {
             })
             canvastext = canvastext + "\n";
         })
-        let canvasEmbed = new MessageEmbed();
+        let canvasEmbed = new EmbedBuilder();
         canvasEmbed.setDescription(canvastext);
         canvasEmbed.setTitle("Public Canvas");
         canvasEmbed.setColor("#00cc99");
-        canvasEmbed.setFooter(ver+" | x: across the canvas, y: down the canvas");
+        canvasEmbed.setFooter({ text: `${ver} | x: across the canvas, y: down the canvas` });
         interaction.reply({ embeds: [canvasEmbed] });
     }
 }

@@ -1,5 +1,6 @@
 const {
-    MessageEmbed
+    EmbedBuilder,
+    ApplicationCommandOptionType
 } = require("discord.js");
 module.exports = {
     "name": "privatecanvas",
@@ -8,7 +9,7 @@ module.exports = {
         {
             name: 'user',
             description: 'The user you want to see the canvas of',
-            type: 'USER',
+            type: ApplicationCommandOptionType.User,
         }
     ],
     async execute(interaction){
@@ -37,11 +38,11 @@ module.exports = {
             canvastext = canvastext + "\n";
         })
         client.users.fetch(userid).then(user => {
-            let canvasEmbed = new MessageEmbed();
+            let canvasEmbed = new EmbedBuilder();
             canvasEmbed.setDescription(canvastext);
             canvasEmbed.setTitle(`Private Canvas | ${user.username}`);
             canvasEmbed.setColor("#00cc99");
-            canvasEmbed.setFooter(ver+" | x: across the canvas, y: down the canvas");
+            canvasEmbed.setFooter({ text: `${ver} | x: across the canvas, y: down the canvas` });
             interaction.reply({ embeds: [canvasEmbed], ephemeral: true });
         });
     }

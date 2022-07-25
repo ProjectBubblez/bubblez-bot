@@ -1,5 +1,5 @@
 const {
-    MessageEmbed
+    EmbedBuilder
 } = require("discord.js");
 const fs = require('fs');
 module.exports = {

@@ -1,7 +1,9 @@
 const {
-    MessageEmbed,
-    MessageActionRow,
-    MessageButton
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ApplicationCommandOptionType
 } = require("discord.js");
 module.exports = {
     "name": "getuser",
@@ -10,19 +12,19 @@ module.exports = {
         {
             name: 'username',
             description: 'The username of the user you want to check',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             required: true
         }
     ],
     async execute(interaction){
         await interaction.deferReply();
-        let userinfo = new MessageEmbed();
+        let userinfo = new EmbedBuilder();
         bubblezclient.getUser(interaction.options.getString("username")).then(user => {
-            const row = new MessageActionRow()
+            const row = new ActionRowBuilder()
 			.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 					.setLabel('See profile')
-					.setStyle('LINK')
+					.setStyle(ButtonStyle.Link)
                     .setURL(`https://bubblez.app/p?${user.username}`),
 			);
             let pronoun;
@@ -51,21 +53,33 @@ module.exports = {
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor("#00cc99");
-	        userinfo.addField("UUID", user.uuid, true);
-            userinfo.addField("Username", `${user.username}`, true);
-            userinfo.addField("Displayname", user.displayname, true);
-			userinfo.addField("Followers", user.followers.toString(), true);
-            userinfo.addField("Pronoun", pronoun, true);
-            userinfo.addField("Badges", badges, true);
-            userinfo.addField("Coins", user.coins, true);
-            userinfo.setFooter(ver);
+	        // userinfo.addField("UUID", user.uuid, true);
+            // userinfo.addField("Username", `${user.username}`, true);
+            // userinfo.addField("Displayname", user.displayname, true);
+			// userinfo.addField("Followers", user.followers.toString(), true);
+            // userinfo.addField("Pronoun", pronoun, true);
+            // userinfo.addField("Badges", badges, true);
+            // userinfo.addField("Coins", user.coins, true);
+            userinfo.addFields([
+                { name: "UUID", value: user.uuid, inline: true },
+                { name: "Username", value: `${user.username}`, inline: true },
+                { name: "Displayname", value: user.displayname, inline: true },
+                { name: "Followers", value: user.followers.toString(), inline: true },
+                { name: "Pronoun", value: pronoun, inline: true },
+                { name: "Badges", value: badges, inline: true },
+                { name: "Coins", value: user.coins, inline: true },
+            ])
+            userinfo.setFooter({ text: ver });
             let bio;
             if(user.bio && user.bio.length > 100){
                 bio = user.bio.slice(0, 100) + "...";
             }else{
                 bio = user.bio;
             }
-            userinfo.addField("Bio", `${bio ? bio : "This user does not have a bio."}`);
+            // userinfo.addField("Bio", `${bio ? bio : "This user does not have a bio."}`);
+            userinfo.addFields([
+                { name: "Bio", value: `${bio ? bio : "This user does not have a bio."}`, inline: true },
+            ])
             userinfo.setThumbnail(user.pfp);
             interaction.editReply({ embeds: [userinfo], components: [row] });
         }).catch(err => {

@@ -1,7 +1,8 @@
 const {
-    MessageEmbed,
-    MessageActionRow,
-    MessageButton
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
 } = require("discord.js");
 module.exports = {
     "name": "devs",
@@ -11,18 +12,18 @@ module.exports = {
         developers.forEach(devID => {
             DevList = DevList + `<@${devID}>\n`
         });
-		const row = new MessageActionRow()
+		const row = new ActionRowBuilder()
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel('See Staff List')
-				.setStyle('LINK')
+				.setStyle(ButtonStyle.Link)
 				.setURL(`https://bubblez.app/staff`),
 		);
-        var Help = new MessageEmbed()
+        var Help = new EmbedBuilder()
             .setColor("#00cc99")
             .setTitle("Developers")
             .setDescription(DevList)
-            .setFooter(ver);
+            .setFooter({ text: ver });
         interaction.reply({ embeds: [Help], ephemeral: true, components: [row] });
     }
 }

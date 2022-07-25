@@ -1,5 +1,6 @@
 const {
-    MessageEmbed
+    EmbedBuilder,
+    ApplicationCommandOptionType
 } = require("discord.js");
 const fs = require('fs');
 module.exports = {
@@ -9,19 +10,46 @@ module.exports = {
         {
             name: 'x',
             description: 'The x (across) position you want to draw at (min: 1, max: 11)',
-            type: 'INTEGER',
+            type: ApplicationCommandOptionType.Integer,
+            choices: [
+                { name: "1", value: 1 },
+                { name: "2", value: 2 },
+                { name: "3", value: 3 },
+                { name: "4", value: 4 },
+                { name: "5", value: 5 },
+                { name: "6", value: 6 },
+                { name: "7", value: 7 },
+                { name: "8", value: 8 },
+                { name: "9", value: 9 },
+                { name: "10", value: 10 },
+                { name: "11", value: 11 },
+            ],
             required: true
         },
         {
             name: 'y',
             description: 'The y (down) position you want to draw at (min: 1, max: 12)',
-            type: 'INTEGER',
+            type: ApplicationCommandOptionType.Integer,
+            choices: [
+                { name: "1", value: 1 },
+                { name: "2", value: 2 },
+                { name: "3", value: 3 },
+                { name: "4", value: 4 },
+                { name: "5", value: 5 },
+                { name: "6", value: 6 },
+                { name: "7", value: 7 },
+                { name: "8", value: 8 },
+                { name: "9", value: 9 },
+                { name: "10", value: 10 },
+                { name: "11", value: 11 },
+                { name: "12", value: 12 },
+            ],
             required: true
         },
         {
             name: 'color',
             description: 'The color you want to use',
-            type: 'STRING',
+            type: ApplicationCommandOptionType.String,
             choices: [
                 {
                     name: "blue", value: "blue"
@@ -74,11 +102,11 @@ module.exports = {
             })
             canvastext = canvastext + "\n";
         })
-        let canvasEmbed = new MessageEmbed();
+        let canvasEmbed = new EmbedBuilder();
         canvasEmbed.setDescription(canvastext);
         canvasEmbed.setTitle("Private Canvas");
         canvasEmbed.setColor("#00cc99");
-        canvasEmbed.setFooter(ver);
+        canvasEmbed.setFooter({ text: ver });
         interaction.reply({ embeds: [canvasEmbed], ephemeral: true });
         fs.writeFileSync('./privatecanvas.json', JSON.stringify(privatecanvas));
     }

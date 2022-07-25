@@ -1,20 +1,20 @@
 require('dotenv').config();
-const discord = require("discord.js");
 const bubblez = require("bubblez.js");
 bubblezclient = new bubblez.Client({
     default: {
         from: "Bubblez Bot"
     },
-	verbose: true
+	verbose: true,
+    disableWebsocket: true
 });
 const fs = require("fs");
 const colors = require('colors');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-client = new discord.Client({ intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES] });
+const { Client, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
+client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V2.${fs.readdirSync("./commands/").length}.35`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.36`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -48,13 +48,13 @@ try{
 
 
 var activities = [
-	{ msg: ver, suggest: '709745787093123119', type: 'WATCHING' },
-	{ msg: 'Live', suggest: '709745787093123119', type: 'PLAYING' },
-	{ msg: 'some bad music', suggest: '200612445373464576', type: 'LISTENING' },
-    { msg: 'show cool messages', suggest: '476641014841475084', type: 'PLAYING' },
-	{ msg: 'with some catgirls', suggest: '476641014841475084', type: 'PLAYING' },
-	{ msg: 'trombone porn', suggest: '430520245288173568', type: 'WATCHING' },
-    { msg: 'Bubblez Champs', suggest: '709745787093123119', type: 5 }
+	{ msg: ver, suggest: '709745787093123119', type: ActivityType.Watching },
+	{ msg: 'Live', suggest: '709745787093123119', type: ActivityType.Playing },
+	{ msg: 'some bad music', suggest: '200612445373464576', type: ActivityType.Listening },
+    { msg: 'some cool messages', suggest: '476641014841475084', type: ActivityType.Watching },
+	{ msg: 'with some catgirls', suggest: '476641014841475084', type: ActivityType.Playing },
+	{ msg: 'trombone porn', suggest: '430520245288173568', type: ActivityType.Watching },
+    { msg: 'Bubblez Champs', suggest: '709745787093123119', type: ActivityType.Competing },
 ]
 
 // setInterval(() => {
@@ -73,12 +73,13 @@ setInterval(() => {
         var activity = msg.msg;
     
         if(msg.suggest != 709745787093123119) {
-	        var activity = `${activity} - ${i.username}"#"${i.discriminator}`;
+	        var activity = `${activity} - ${i.username}#${i.discriminator}`;
         }else{
             var activity = activity;
         }
         
-        client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online'});
+        client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online' });
+        // console.log(`${activity}`.green + ` - ${i.username}#${i.discriminator}`.cyan + ` - ${msg.type}`.yellow);
 
     });
 }, 15e3);
@@ -110,7 +111,7 @@ if(fs.existsSync("./giveaways.json")){
 }
 
 console.log('➤  '.gray + "Started loading commands".gray);
-client.commands = new discord.Collection();
+client.commands = new Collection();
 let commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith('.js'));
 commandFiles.forEach(commandName => {
     let command = require(`./commands/${commandName}`);
@@ -132,56 +133,48 @@ async function refreshSlashCommands(){
             .setName(command.name)
             .setDescription(command.description ?? utility.getText("english", command.name, "commandDescription"));
         if(command.options) command.options.forEach(option => {
-            if(option.type == "USER"){
+            if(option.type == ApplicationCommandOptionType.User){
                 slashcommand.addUserOption(useroption => {
                     return setStandardOptions(useroption, option);
                 });
-            }else if(option.type == "STRING"){
+            }else if(option.type == ApplicationCommandOptionType.String){
                 slashcommand.addStringOption(stringoption => {
                     return setStandardOptions(stringoption, option);
                 });
-            }else if(option.type == "CHANNEL"){
+            }else if(option.type == ApplicationCommandOptionType.Channel){
                 slashcommand.addChannelOption(channeloption => {
                     return setStandardOptions(channeloption, option);
                 });
-            }else if(option.type == "INTEGER"){
+            }else if(option.type == ApplicationCommandOptionType.Integer){
                 slashcommand.addIntegerOption(integeroption => {
                     return setStandardOptions(integeroption, option);
                 });
-            }else if(option.type == "USER"){
-                slashcommand.addUserOption(useroption => {
-                    return setStandardOptions(useroption, option);
-                });
-            }else if(option.type == "ROLE"){
+            }else if(option.type == ApplicationCommandOptionType.Role){
                 slashcommand.addRoleOption(roleoption => {
                     return setStandardOptions(roleoption, option);
                 });
-            }else if(option.type == "SUB_COMMAND"){
+            }else if(option.type == ApplicationCommandOptionType.Subcommand){
                 return slashcommand.addSubcommand(subcommand => {
                     subcommand.setName(option.name);
                     subcommand.setDescription(option.description);
                     option.options.forEach(option => {
-                        if(option.type == "USER"){
+                        if(option.type == ApplicationCommandOptionType.User){
                             subcommand.addUserOption(useroption => {
                                 return setStandardOptions(useroption, option);
                             });
-                        }else if(option.type == "STRING"){
+                        }else if(option.type == ApplicationCommandOptionType.String){
                             subcommand.addStringOption(stringoption => {
                                 return setStandardOptions(stringoption, option);
                             });
-                        }else if(option.type == "CHANNEL"){
+                        }else if(option.type == ApplicationCommandOptionType.Channel){
                             subcommand.addChannelOption(channeloption => {
                                 return setStandardOptions(channeloption, option);
                             });
-                        }else if(option.type == "INTEGER"){
+                        }else if(option.type == ApplicationCommandOptionType.Integer){
                             subcommand.addIntegerOption(integeroption => {
                                 return setStandardOptions(integeroption, option);
                             });
-                        }else if(option.type == "USER"){
-                            subcommand.addUserOption(useroption => {
-                                return setStandardOptions(useroption, option);
-                            });
-                        }else if(option.type == "ROLE"){
+                        }else if(option.type == ApplicationCommandOptionType.Role){
                             subcommand.addRoleOption(roleoption => {
                                 return setStandardOptions(roleoption, option);
                             });
@@ -189,7 +182,7 @@ async function refreshSlashCommands(){
                     });
                     return subcommand;
                 });
-            }else if(option.type == "SUB_COMMAND_GROUP"){
+            }else if(option.type == ApplicationCommandOptionType.SubcommandGroup){
                 return slashcommand.addSubcommandGroup(subcommandgroup => {
                     subcommandgroup.setName(option.name);
                     subcommandgroup.setDescription(option.description);
@@ -198,27 +191,23 @@ async function refreshSlashCommands(){
                             subcommand.setName(option.name);
                             subcommand.setDescription(option.description);
                             option.options.forEach(option => {
-                                if(option.type == "USER"){
+                                if(option.type == ApplicationCommandOptionType.User){
                                     subcommand.addUserOption(useroption => {
                                         return setStandardOptions(useroption, option);
                                     });
-                                }else if(option.type == "STRING"){
+                                }else if(option.type == ApplicationCommandOptionType.String){
                                     subcommand.addStringOption(stringoption => {
                                         return setStandardOptions(stringoption, option);
                                     });
-                                }else if(option.type == "CHANNEL"){
+                                }else if(option.type == ApplicationCommandOptionType.Channel){
                                     subcommand.addChannelOption(channeloption => {
                                         return setStandardOptions(channeloption, option);
                                     });
-                                }else if(option.type == "INTEGER"){
+                                }else if(option.type == ApplicationCommandOptionType.Integer){
                                     subcommand.addIntegerOption(integeroption => {
                                         return setStandardOptions(integeroption, option);
                                     });
-                                }else if(option.type == "USER"){
-                                    subcommand.addUserOption(useroption => {
-                                        return setStandardOptions(useroption, option);
-                                    });
-                                }else if(option.type == "ROLE"){
+                                }else if(option.type == ApplicationCommandOptionType.Role){
                                     subcommand.addRoleOption(roleoption => {
                                         return setStandardOptions(roleoption, option);
                                     });
@@ -268,12 +257,47 @@ bubblezclient.once('ready', async (user) => {
 });
 
 client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isCommand()) return;
-	try{
-        await client.commands.get(interaction.commandName).execute(interaction);
-    }catch(err){
-        console.log(`Command: ${interaction.commandName}, run by: ${interaction.user.username}#${interaction.user.discriminator} failed for the reason: ${err}`);
-        await interaction.reply({ content: "Something went wrong", ephemeral: true });
+	if (interaction.type !== InteractionType.ApplicationCommand && interaction.type !== InteractionType.ModalSubmit) return;
+	if (interaction.type === InteractionType.ApplicationCommand) {
+        try{
+            await client.commands.get(interaction.commandName).execute(interaction);
+        }catch(err){
+            console.log(`Command: ${interaction.commandName}, run by: ${interaction.user.username}#${interaction.user.discriminator} failed for the reason:`);
+            console.log(err);
+            await interaction.reply({ content: "Something went wrong", ephemeral: true });
+        }
+    } else if (interaction.type === InteractionType.ModalSubmit) {
+        try{
+            const row = new ActionRowBuilder()
+		    .addComponents(
+			new ButtonBuilder()
+				.setLabel('Server Invite')
+				.setStyle(ButtonStyle.Link)
+				.setURL(`https://discord.gg/Bubblez`),
+		    );
+            var Support = new EmbedBuilder()
+                .setColor("#ff8c00")
+                .setTitle("Support | " + interaction.user.username + "#" + interaction.user.discriminator)
+                // .addField("User:", "<@" + interaction.user.id + ">")
+                // .addField("Reason:", interaction.options.getString("message"))
+                .addFields([
+                    { name: "User:", value: `<@${interaction.user.id}>` },
+                    { name: "Reason:", value: interaction.fields.getTextInputValue("support-message") },
+                ])
+                .setTimestamp()
+                .setFooter({ text: ver });
+            // Support.addField("Channel:", "<#" + interaction.channel.id + ">");
+            Support.addFields([
+                { name: "Channel:", value: `<#${interaction.channel.id}>` },
+                { name: "Server:", value: `${interaction.guild.name}` },
+            ])
+            client.channels.cache.get(config.supportid).send({ content: `<@&${config.staffid}>`, embeds: [Support] });
+            interaction.reply({ content: "Message sent to support team", ephemeral: true, components: [row] });
+        }catch(err){
+            console.log(`Command: Modal, run by: ${interaction.user.username}#${interaction.user.discriminator} failed for the reason:`);
+            console.log(err);
+            await interaction.reply({ content: "Something went wrong", ephemeral: true });
+        }
     }
 });
 
@@ -301,8 +325,8 @@ function startCheckingGiveaways(){
                             client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`<@${user}> won ${title}!!! 🎉🎉🎉`);
                             giveaways[giveawayNumber].winner = user;
                             client.users.fetch(user).then((userObject) => {
-                                GiveawayEmbed = new discord.MessageEmbed();
-                                GiveawayEmbed.setFooter(ver);
+                                GiveawayEmbed = new EmbedBuilder();
+                                GiveawayEmbed.setFooter({ text: ver });
                                 GiveawayEmbed.setTitle(giveaway.prize);
                                 let GiveawayEndTime = new Date(giveaway.endtime);
                                 GiveawayEmbed.setDescription(`Giveaway ended!\nWinner: <@${userObject.id}>`);
@@ -315,8 +339,8 @@ function startCheckingGiveaways(){
                         }else{
                             client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).send(`No-one won ${title}`);
                             giveaways[giveawayNumber].winner = 1;
-                            GiveawayEmbed = new discord.MessageEmbed();
-                            GiveawayEmbed.setFooter(ver);
+                            GiveawayEmbed = new EmbedBuilder();
+                            GiveawayEmbed.setFooter({ text: ver });
                             GiveawayEmbed.setTitle(giveaway.prize);
                             let GiveawayEndTime = new Date(giveaway.endtime);
                             GiveawayEmbed.setDescription(`Giveaway ended!\nNo-one won :(`);
@@ -332,8 +356,8 @@ function startCheckingGiveaways(){
                 });
             }else{
                 client.guilds.cache.get(giveaway.guildid).channels.cache.get(giveaway.channelid).messages.fetch(giveaway.messageid).then(message => {
-                    GiveawayEmbed = new discord.MessageEmbed();
-                    GiveawayEmbed.setFooter(ver);
+                    GiveawayEmbed = new EmbedBuilder();
+                    GiveawayEmbed.setFooter({ text: ver });
                     GiveawayEmbed.setTitle(giveaway.prize);
                     let GiveawayEndTime = new Date(giveaway.endtime);
                     let endtimeinms = GiveawayEndTime.getTime() - time.getTime();
