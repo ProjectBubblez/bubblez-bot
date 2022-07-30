@@ -13,7 +13,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.36`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.37`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -254,6 +254,35 @@ bubblezclient.once('ready', async (user) => {
     console.log(`Logged in as: ${user.username}`);
     startCheckingGiveaways();
 });
+
+bubblezclient.on('devlog', (post) => {
+    // console.log(post);
+    const row = new ActionRowBuilder()
+    .addComponents(
+        new ButtonBuilder()
+            .setLabel('View Post')
+            .setStyle(ButtonStyle.Link)
+            .setURL(`https://bubblez.app/devlog`)
+    );
+    var DevLog = new EmbedBuilder()
+        .setColor(`#00CC99`)
+        .setTitle(`New Devlog`)
+        .setDescription(post.blogcontent)
+        // .setAuthor(post.blogposter_displayname, post.blogposter_pfp)
+        .setAuthor({name: post.blogposter_displayname, iconURL: post.blogposter_pfp})
+        .setTimestamp()
+        .setFooter({ text: ver });
+        if(post.blogimage){
+            DevLog.setImage(post.blogimage);
+        }
+        if(post.blogtag){
+            DevLog.setFields([{name: `Tag`, value: post.blogtag}]);
+        }
+        client.channels.cache.get(config.devlogid).send({ content: `<@&${config.updatepingid}>`, embeds: [DevLog], components: [row] });
+        // Need to make it so if there is no tag it will ignore it and not put it onto the post
+        // Need to make it so if there is no image it will ignore it and not put it onto the post
+
+})
 
 client.on('interactionCreate', async (interaction) => {
 	if (interaction.type !== InteractionType.ApplicationCommand && interaction.type !== InteractionType.ModalSubmit) return;
