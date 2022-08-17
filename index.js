@@ -48,7 +48,7 @@ try{
 
 var activities = [
 	{ msg: ver, suggest: '709745787093123119', type: ActivityType.Watching },
-	{ msg: 'Live', suggest: '709745787093123119', type: ActivityType.Playing },
+	{ msg: 'Bubblez Next', suggest: '709745787093123119', type: ActivityType.Playing },
 	{ msg: 'some bad music', suggest: '200612445373464576', type: ActivityType.Listening },
     { msg: 'some cool messages', suggest: '476641014841475084', type: ActivityType.Watching },
 	{ msg: 'with some catgirls', suggest: '476641014841475084', type: ActivityType.Playing },
