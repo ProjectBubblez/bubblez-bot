@@ -13,7 +13,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.41`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.42`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -272,6 +272,7 @@ bubblezclient.on('devlog', (post) => {
         .setTimestamp()
         .setFooter({ text: ver });
         let blogcontent;
+        let blogcontentnoembed;
         if(post.blogcontent && post.blogcontent.length >= 4096){
             blogcontentnoembed = post.blogcontent;
         }else{
