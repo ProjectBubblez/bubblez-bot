@@ -272,7 +272,7 @@ bubblezclient.on('devlog', (post) => {
         .setTimestamp()
         .setFooter({ text: ver });
         let blogcontent;
-        let blogcontentnoembed;
+        let blogcontentnoembed = " ";
         if(post.blogcontent && post.blogcontent.length >= 4096){
             blogcontentnoembed = post.blogcontent;
         }else{
