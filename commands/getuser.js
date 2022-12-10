@@ -46,11 +46,10 @@ module.exports = {
             if(user.pronoun == "ziehir") pronoun = "Zie/Hir";
             if(user.pronoun == "none") pronoun = "None";
             var badges = "";
-            if(user.rank == null) user.rank = "[]";
             JSON.parse(user.rank).forEach(rank => {
                 badges += `${rank.charAt(0).toUpperCase()}${rank.slice(1)}\n`;
             });
-            if(badges == "") badges = "User";
+            if(badges == "") badges = "None";
             userinfo.setTitle("Bubblez Profile Info");
             userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
             userinfo.setColor("#00cc99");
@@ -82,7 +81,8 @@ module.exports = {
                 { name: "Bio", value: `${bio ? bio : "This user does not have a bio."}`, inline: true },
             ])
             userinfo.setThumbnail(user.pfp);
-            interaction.editReply({ embeds: [userinfo], components: [row] });
+            console.log(userinfo.data.fields);
+            interaction.editReply({ embeds: [userinfo], components: [row] }).catch(err => {console.log(1, err)});
         }).catch(err => {
             console.log(err);
             interaction.editReply({ content: "User not found" });
