@@ -46,6 +46,7 @@ module.exports = {
             if(user.pronoun == "ziehir") pronoun = "Zie/Hir";
             if(user.pronoun == "none") pronoun = "None";
             var badges = "";
+            if(user.rank == null) user.rank = "[]";
             JSON.parse(user.rank).forEach(rank => {
                 badges += `${rank.charAt(0).toUpperCase()}${rank.slice(1)}\n`;
             });
