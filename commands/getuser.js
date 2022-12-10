@@ -81,8 +81,7 @@ module.exports = {
                 { name: "Bio", value: `${bio ? bio : "This user does not have a bio."}`, inline: true },
             ])
             userinfo.setThumbnail(user.pfp);
-            console.log(userinfo.data.fields);
-            interaction.editReply({ embeds: [userinfo], components: [row] }).catch(err => {console.log(1, err)});
+            interaction.editReply({ embeds: [userinfo], components: [row] });
         }).catch(err => {
             console.log(err);
             interaction.editReply({ content: "User not found" });
