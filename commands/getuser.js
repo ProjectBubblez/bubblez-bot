@@ -47,7 +47,35 @@ module.exports = {
             if(user.pronoun == "none") pronoun = "None";
             var badges = "";
             JSON.parse(user.rank).forEach(rank => {
-                badges += `${rank.charAt(0).toUpperCase()}${rank.slice(1)}\n`;
+                // badges += `${rank.charAt(0).toUpperCase()}${rank.slice(1)}\n`;
+                switch(rank){
+                    default:
+                    break;
+                    case "founder":
+                        badges += `<:FounderBadge:1051251248084553808> `;
+                    break;
+                    case "admin":
+                        badges += `<:DevBadge:1051251246834655242> `;
+                    break;
+                    case "mod":
+                        badges += `<:StaffBadge:1051251252798947488> `;
+                    break;
+                    case "verified":
+                        badges += `<:VerifiedBadge:1051251244326457374> `;
+                    break;
+                    case "pro":
+                        badges += `<:ProBadge:1051251250278174760> `;
+                    break;
+                    case "partner":
+                        badges += `<:PartnerBadge:1051251251532283944> `;
+                    break;
+                    case "news":
+                        badges += `<:NewsBadge:1051251249162485800> `;
+                    break;
+                    case "bot":
+                        badges += `<:BotBadge:1051251245505069137> `;
+                    break;
+                }
             });
             if(badges == "") badges = "None";
             userinfo.setTitle("Bubblez Profile Info");
