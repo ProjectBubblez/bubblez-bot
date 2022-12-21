@@ -8,12 +8,13 @@ bubblezclient = new bubblez.Client({
 });
 const fs = require("fs");
 const colors = require('colors');
+const fetch = require('node-fetch');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.45`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.46`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -253,6 +254,7 @@ client.once('ready', async () => {
 bubblezclient.once('ready', async (user) => {
     console.log(`Logged in as: ${user.username}`);
     startCheckingGiveaways();
+    startUpdatingChannels();
 });
 
 bubblezclient.on('devlog', (post) => {
@@ -332,6 +334,31 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 });
+
+function startUpdatingChannels(){
+    let statusChannelName;
+    let Harroled;
+    setInterval(async () => {
+        let response = await fetch('https://bubblez.app/home');
+        const data = response.status;
+        if(data == 200){
+            statusChannelName = "Status: 🟢";
+        }else{
+            statusChannelName = "Status: 🔴";
+        }
+        // console.log(`what is Harroled: ${Harroled}`);
+        if(Harroled == statusChannelName){
+            console.log("channel name has not changed");
+        }else{
+            Harroled = statusChannelName;
+            client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).setName(statusChannelName)
+            .then(newChannel => {
+                console.log(`Channel's new name is ${newChannel.name}`);
+            })
+            .catch(console.error);
+        }
+    }, 15e3)
+}
 
 function startCheckingGiveaways(){
     setInterval(() => {
