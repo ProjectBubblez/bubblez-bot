@@ -14,7 +14,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.46`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.47`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -343,6 +343,8 @@ function startUpdatingChannels(){
         const data = response.status;
         if(data == 200){
             statusChannelName = "Status: 🟢";
+        }else if(data == 503){
+            statusChannelName = "Status: 🟠";
         }else{
             statusChannelName = "Status: 🔴";
         }
