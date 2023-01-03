@@ -339,7 +339,7 @@ function startUpdatingChannels(){
     let statusChannelName;
     let Harroled;
     setInterval(async () => {
-        let response = await fetch('https://bubblez.app/home');
+        let response = await fetch('https://bubblez.app/api/v1/health');
         const data = response.status;
         if(data == 200){
             statusChannelName = "Status: 🟢";
