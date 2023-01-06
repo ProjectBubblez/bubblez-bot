@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.48`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.49`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -41,13 +41,14 @@ try{
 
 
 var activities = [
-	{ msg: ver, suggest: '709745787093123119', type: ActivityType.Watching },
-	{ msg: 'Bubblez Next', suggest: '709745787093123119', type: ActivityType.Playing },
-	{ msg: 'some bad music', suggest: '200612445373464576', type: ActivityType.Listening },
-    { msg: 'some cool messages', suggest: '476641014841475084', type: ActivityType.Watching },
-	{ msg: 'with some catgirls', suggest: '476641014841475084', type: ActivityType.Playing },
-	{ msg: 'trombone porn', suggest: '430520245288173568', type: ActivityType.Watching },
-    { msg: 'Bubblez Champs', suggest: '709745787093123119', type: ActivityType.Competing },
+	// { msg: ver, suggest: '709745787093123119', type: ActivityType.Watching },
+	// { msg: 'Bubblez Next', suggest: '709745787093123119', type: ActivityType.Playing },
+	// { msg: 'some bad music', suggest: '200612445373464576', type: ActivityType.Listening },
+    // { msg: 'some cool messages', suggest: '476641014841475084', type: ActivityType.Watching },
+	// { msg: 'with some catgirls', suggest: '476641014841475084', type: ActivityType.Playing },
+	// { msg: 'trombone porn', suggest: '430520245288173568', type: ActivityType.Watching },
+    // { msg: 'Bubblez Champs', suggest: '709745787093123119', type: ActivityType.Competing },
+    { msg: 'Bubblez Legacy', suggest: '709745787093123119', type: ActivityType.Watching}
 ]
 
 // setInterval(() => {
@@ -71,7 +72,7 @@ setInterval(() => {
             var activity = activity;
         }
         
-        client.user.setPresence({ activities: [{ name: activity, type: msg.type }], status: 'online' });
+        client.user.setPresence({ activities: [{ name: activity, type: msg.type }] });
         // console.log(`${activity}`.green + ` - ${i.username}#${i.discriminator}`.cyan + ` - ${msg.type}`.yellow);
 
     });
@@ -241,7 +242,8 @@ client.once('ready', async () => {
     }else{
         refreshSlashCommands();
     }
-    console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
+    console.log('✔  '.green + colors.green(`bot online | ${ver}`));
+    startUpdatingChannels();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -293,14 +295,18 @@ function startUpdatingChannels(){
     let statusChannelName;
     let Harroled;
     setInterval(async () => {
+        // let response = await fetch('https://bubblez.app/api/v1/health');
         let response = await fetch('https://bubblez.app/api/v1/health');
         const data = response.status;
         if(data == 200){
             statusChannelName = "Status: 🟢";
+            client.user.setStatus('online');
         }else if(data == 503){
             statusChannelName = "Status: 🟠";
+            client.user.setStatus('idle');
         }else{
             statusChannelName = "Status: 🔴";
+            client.user.setStatus('dnd');
         }
         // console.log(`what is Harroled: ${Harroled}`);
         if(Harroled == statusChannelName){
@@ -313,7 +319,7 @@ function startUpdatingChannels(){
             })
             .catch(console.error);
         }
-    }, 15e3)
+    }, 60e3)
 }
 
 function startCheckingGiveaways(){
