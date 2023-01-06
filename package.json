@@ -19,7 +19,6 @@
   "homepage": "https://github.com/ProjectBubblez/bubblez-bot#readme",
   "dependencies": {
     "@discordjs/rest": "^0.4.1",
-    "bubblez.js": "^1.2.1",
     "colors": "^1.4.0",
     "cpu-stat": "^2.0.1",
     "discord-api-types": "^0.33.0",

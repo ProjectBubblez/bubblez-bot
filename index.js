@@ -1,11 +1,4 @@
 require('dotenv').config();
-const bubblez = require("bubblez.js");
-bubblezclient = new bubblez.Client({
-    default: {
-        from: "Bubblez Bot"
-    },
-	verbose: true
-});
 const fs = require("fs");
 const colors = require('colors');
 const fetch = require('node-fetch');
@@ -14,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.47`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.48`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -251,45 +244,6 @@ client.once('ready', async () => {
     console.log('✔  '.green + colors.green(`Bot is ready | ${ver}`));
 });
 
-bubblezclient.once('ready', async (user) => {
-    console.log(`Logged in as: ${user.username}`);
-    startCheckingGiveaways();
-    startUpdatingChannels();
-});
-
-bubblezclient.on('devlog', (post) => {
-    // console.log(post);
-    const row = new ActionRowBuilder()
-    .addComponents(
-        new ButtonBuilder()
-            .setLabel('View Post')
-            .setStyle(ButtonStyle.Link)
-            .setURL(`https://bubblez.app/devlog`)
-    );
-    var DevLog = new EmbedBuilder()
-        .setColor(`#00CC99`)
-        .setTitle(`New Devlog`)
-        // .setAuthor(post.blogposter_displayname, post.blogposter_pfp)
-        .setAuthor({name: post.blogposter_displayname, iconURL: post.blogposter_pfp})
-        .setTimestamp()
-        .setFooter({ text: ver });
-        let blogcontent;
-        let blogcontentnoembed = " ";
-        if(post.blogcontent && post.blogcontent.length >= 4096){
-            blogcontentnoembed = post.blogcontent;
-        }else{
-            DevLog.setDescription(post.blogcontent);
-        }
-        if(post.blogimage){
-            DevLog.setImage(post.blogimage);
-        }
-        if(post.blogtag){
-            DevLog.setFields([{name: `Tag`, value: post.blogtag}]);
-        }
-        client.channels.cache.get(config.devlogid).send({ content: `<@&${config.updatepingid}>\n${blogcontentnoembed}`, embeds: [DevLog], components: [row] }).then(message => message.react("❤️"));
-
-})
-
 client.on('interactionCreate', async (interaction) => {
 	if (interaction.type !== InteractionType.ApplicationCommand && interaction.type !== InteractionType.ModalSubmit) return;
 	if (interaction.type === InteractionType.ApplicationCommand) {
@@ -394,7 +348,6 @@ function startCheckingGiveaways(){
                                 GiveawayEmbed.setColor("#cc0000");
                                 GiveawayEmbed.setTimestamp(GiveawayEndTime);
                                 message.edit({ embeds: [GiveawayEmbed] });
-                                bubblezclient.send(`${userObject.username} won: ${title}!!! 🎉🎉🎉`, { from: "Giveaways", locked: true });
 							    console.log('✔  '.green + colors.green(`${userObject.username} is the winner of a giveaway.`));
                             })
                         }else{
@@ -447,4 +400,3 @@ function startCheckingGiveaways(){
 }
 
 client.login(process.env.DTOKEN);
-bubblezclient.login(process.env.BTOKEN);
