@@ -48,7 +48,7 @@ var activities = [
 	// { msg: 'with some catgirls', suggest: '476641014841475084', type: ActivityType.Playing },
 	// { msg: 'trombone porn', suggest: '430520245288173568', type: ActivityType.Watching },
     // { msg: 'Bubblez Champs', suggest: '709745787093123119', type: ActivityType.Competing },
-    { msg: 'Bubblez Legacy', suggest: '709745787093123119', type: ActivityType.Watching}
+    { msg: 'Bubblez Next', suggest: '709745787093123119', type: ActivityType.Watching}
 ]
 
 // setInterval(() => {
