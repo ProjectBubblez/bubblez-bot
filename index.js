@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.49`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.50`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -244,6 +244,7 @@ client.once('ready', async () => {
     }
     console.log('✔  '.green + colors.green(`bot online | ${ver}`));
     startUpdatingChannels();
+    startUpdatingChannelsDev();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -296,16 +297,21 @@ function startUpdatingChannels(){
     let Harroled;
     setInterval(async () => {
         // let response = await fetch('https://bubblez.app/api/v1/health');
-        let response = await fetch('https://bubblez.app/api/v1/health');
-        const data = response.status;
+        let response = await fetch('https://api.bubblez.app/v1/health').then(async res => {
+            let statusCode = res.status;
+            let json = await res.json();
+            // console.log(json)
+            return { statusCode, json };
+          });
+        const data = response.statusCode;
         if(data == 200){
-            statusChannelName = "Status: 🟢";
+            statusChannelName = "🟢";
             client.user.setStatus('online');
         }else if(data == 503){
-            statusChannelName = "Status: 🟠";
+            statusChannelName = "🟠";
             client.user.setStatus('idle');
         }else{
-            statusChannelName = "Status: 🔴";
+            statusChannelName = "🔴";
             client.user.setStatus('dnd');
         }
         // console.log(`what is Harroled: ${Harroled}`);
@@ -313,9 +319,86 @@ function startUpdatingChannels(){
             console.log("channel name has not changed");
         }else{
             Harroled = statusChannelName;
-            client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).setName(statusChannelName)
+            client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).setName("Status:『"+statusChannelName+"』")
             .then(newChannel => {
+                const row = new ActionRowBuilder()
+		        .addComponents(
+			    new ButtonBuilder()
+				    .setLabel('Status Page')
+				    .setStyle(ButtonStyle.Link)
+				    .setURL(`https://status.bubblez.app/`),
+		        );
+                var Status = new EmbedBuilder()
+                    .setTitle("Current Status:『"+statusChannelName+"』")
+                    .setDescription("```json\n"+JSON.stringify(response.json, null, 2)+"```")
+                    .setTimestamp()
+                    .setFooter({ text: ver });
+                if(data == 200){
+                    Status.setColor("#75ad57");
+                }else if(data == 503){
+                    Status.setColor("#ef8d0c");
+                }else{
+                    Status.setColor("#d92d43");
+                }
+                client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).send({ embeds: [Status], components: [row]  });
                 console.log(`Channel's new name is ${newChannel.name}`);
+            })
+            .catch(console.error);
+        }
+    }, 60e3)
+}
+
+function startUpdatingChannelsDev(){
+    let statusChannelNameDev;
+    let HarroledDev;
+    setInterval(async () => {
+        // let response = await fetch('https://bubblez.app/api/v1/health');
+        let response = await fetch('https://api.bubblez.app/v2/health').then(async res => {
+            let statusCode = res.status;
+            let json = await res.json();
+            // console.log(json)
+            return { statusCode, json };
+          });
+        const data = response.statusCode;
+        if(data == 200){
+            statusChannelNameDev = "🟢";
+            client.user.setStatus('online');
+        }else if(data == 503){
+            statusChannelNameDev = "🟠";
+            client.user.setStatus('idle');
+        }else{
+            statusChannelNameDev = "🔴";
+            client.user.setStatus('dnd');
+        }
+        // console.log(`what is Harroled: ${HarroledDev}`);
+        if(HarroledDev == statusChannelNameDev){
+            console.log("[Dev] channel name has not changed");
+        }else{
+            HarroledDev = statusChannelNameDev;
+            client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).setName("Status:『"+statusChannelNameDev+"』")
+            .then(newChannel => {
+                // console.log(response)
+                const row = new ActionRowBuilder()
+		        .addComponents(
+			    new ButtonBuilder()
+				    .setLabel('Status Page')
+				    .setStyle(ButtonStyle.Link)
+				    .setURL(`https://status.bubblez.app/`),
+		        );
+                var Status = new EmbedBuilder()
+                    .setTitle("Current Status:『"+statusChannelNameDev+"』")
+                    .setDescription("```json\n"+JSON.stringify(response.json, null, 2)+"```")
+                    .setTimestamp()
+                    .setFooter({ text: ver });
+                if(data == 200){
+                    Status.setColor("#75ad57");
+                }else if(data == 503){
+                    Status.setColor("#ef8d0c");
+                }else{
+                    Status.setColor("#d92d43");
+                }
+                client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).send({ embeds: [Status], components: [row]  });
+                console.log(`[Dev] Channel's new name is ${newChannel.name}`);
             })
             .catch(console.error);
         }
