@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.50`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.51`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -340,7 +340,22 @@ function startUpdatingChannels(){
                 }else{
                     Status.setColor("#d92d43");
                 }
-                client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).send({ embeds: [Status], components: [row]  });
+                client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).send({ embeds: [Status], components: [row]  }).then(function (message){
+                    var d = new Date(message.createdTimestamp);
+                    let yyyy = d.getFullYear();
+                    let mm = d.getMonth() + 1;
+                    let dd = d.getDate();
+
+                    if (dd < 10) dd = '0' + dd;
+                    if (mm < 10) mm = '0' + mm;
+
+                    let formattedD = dd + '/' + mm + '/' + yyyy;
+
+                    message.startThread({
+                        name: `Status:『${statusChannelName}』『${formattedD}』`,
+                        autoArchiveDuration: 10080,
+                    });
+                });
                 console.log(`Channel's new name is ${newChannel.name}`);
             })
             .catch(console.error);
@@ -352,7 +367,7 @@ function startUpdatingChannelsDev(){
     let statusChannelNameDev;
     let HarroledDev;
     setInterval(async () => {
-        // let response = await fetch('https://bubblez.app/api/v1/health');
+        // https://api.bubblez.app/v2/health
         let response = await fetch('https://api.bubblez.app/v2/health').then(async res => {
             let statusCode = res.status;
             let json = await res.json();
@@ -397,12 +412,28 @@ function startUpdatingChannelsDev(){
                 }else{
                     Status.setColor("#d92d43");
                 }
-                client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).send({ embeds: [Status], components: [row]  });
+                client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).send({ embeds: [Status], components: [row]  }).then(function (message){
+                    var d = new Date(message.createdTimestamp);
+                    let yyyy = d.getFullYear();
+                    let mm = d.getMonth() + 1;
+                    let dd = d.getDate();
+
+                    if (dd < 10) dd = '0' + dd;
+                    if (mm < 10) mm = '0' + mm;
+
+                    let formattedD = dd + '/' + mm + '/' + yyyy;
+
+                    message.startThread({
+                        name: `Status:『${statusChannelNameDev}』『${formattedD}』`,
+                        autoArchiveDuration: 10080,
+                    });
+                });
                 console.log(`[Dev] Channel's new name is ${newChannel.name}`);
             })
             .catch(console.error);
         }
-    }, 60e3)
+    // }, 60e3)
+    }, 30000)
 }
 
 function startCheckingGiveaways(){
