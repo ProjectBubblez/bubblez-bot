@@ -362,13 +362,13 @@ function startUpdatingChannelsDev(){
         const data = response.statusCode;
         if(data == 200){
             statusChannelNameDev = "🟢";
-            client.user.setStatus('online');
+            // client.user.setStatus('online');
         }else if(data == 503){
             statusChannelNameDev = "🟠";
-            client.user.setStatus('idle');
+            // client.user.setStatus('idle');
         }else{
             statusChannelNameDev = "🔴";
-            client.user.setStatus('dnd');
+            // client.user.setStatus('dnd');
         }
         // console.log(`what is Harroled: ${HarroledDev}`);
         if(HarroledDev == statusChannelNameDev){
