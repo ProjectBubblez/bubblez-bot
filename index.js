@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.51`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.52`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -302,7 +302,7 @@ function startUpdatingChannels(){
             let json = await res.json();
             // console.log(json)
             return { statusCode, json };
-          });
+          }).catch(console.error);
         const data = response.statusCode;
         if(data == 200){
             statusChannelName = "🟢";
@@ -340,25 +340,24 @@ function startUpdatingChannels(){
                 }else{
                     Status.setColor("#d92d43");
                 }
-                client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).send({ embeds: [Status], components: [row]  }).then(function (message){
-                    var d = new Date(message.createdTimestamp);
-                    let yyyy = d.getFullYear();
-                    let mm = d.getMonth() + 1;
-                    let dd = d.getDate();
+                // client.guilds.cache.get(config.guildid).channels.cache.get(config.statuschannelid).send({ embeds: [Status], components: [row]  }).then(function (message){
+                //     var d = new Date(message.createdTimestamp);
+                //     let yyyy = d.getFullYear();
+                //     let mm = d.getMonth() + 1;
+                //     let dd = d.getDate();
 
-                    if (dd < 10) dd = '0' + dd;
-                    if (mm < 10) mm = '0' + mm;
+                //     if (dd < 10) dd = '0' + dd;
+                //     if (mm < 10) mm = '0' + mm;
 
-                    let formattedD = dd + '/' + mm + '/' + yyyy;
+                //     let formattedD = dd + '/' + mm + '/' + yyyy;
 
-                    message.startThread({
-                        name: `Status:『${statusChannelName}』『${formattedD}』`,
-                        autoArchiveDuration: 10080,
-                    });
-                });
+                //     message.startThread({
+                //         name: `Status:『${statusChannelName}』『${formattedD}』`,
+                //         autoArchiveDuration: 10080,
+                //     });
+                // });
                 console.log(`Channel's new name is ${newChannel.name}`);
-            })
-            .catch(console.error);
+            }).catch(console.error);
         }
     }, 60e3)
 }
@@ -373,7 +372,7 @@ function startUpdatingChannelsDev(){
             let json = await res.json();
             // console.log(json)
             return { statusCode, json };
-          });
+          }).catch(console.error);
         const data = response.statusCode;
         if(data == 200){
             statusChannelNameDev = "🟢";
@@ -429,11 +428,9 @@ function startUpdatingChannelsDev(){
                     });
                 });
                 console.log(`[Dev] Channel's new name is ${newChannel.name}`);
-            })
-            .catch(console.error);
+            }).catch(console.error);
         }
-    // }, 60e3)
-    }, 30000)
+    }, 60e3)
 }
 
 function startCheckingGiveaways(){
