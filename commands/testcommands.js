@@ -25,7 +25,7 @@ module.exports = {
             return;
         }
         await interaction.deferReply();
-        function convert(value, asNumber = false){
+        function convert(value){
             return Dinero({ amount: value, currency: 'GBP'}).toFormat()
         }
         let jsoninfo = "";
@@ -37,6 +37,12 @@ module.exports = {
         await fetch(url, {method: 'GET', headers: headers,}).then(res => res.json()).then(function(json){jsoninfo = json})
         let jsonamount = jsoninfo["amount"];
         let amountPence = jsonamount["minorUnits"];
+
+        let jsonCurrentAmount = jsoninfo["effectiveBalance"];
+        let currentAmountPence = jsonCurrentAmount["minorUnits"];
+
+        let jsonPending = jsoninfo["pendingTransactions"];
+        let pendingPence = jsonPending["minorUnits"];
         // console.log(convert(amountPence));
         let bank = new EmbedBuilder();
             // const row = new ActionRowBuilder()
@@ -47,7 +53,12 @@ module.exports = {
             //         .setURL(`https://bubblez.app/home`),
 			// );
 			// userinfo.setDescription("Made with: [bubblez.js](https://www.npmjs.com/package/bubblez.js)");
-            bank.setDescription("balance: "+convert(amountPence))
+            // bank.setDescription("\"Amount\" (never trust): "+convert(amountPence)+"\nCurrent Amount (what we can still spend): "+convert(currentAmountPence)+"\nPending (what still needs to go out): "+convert(pendingPence))
+            bank.addFields(
+                { name: "\"Amount\" `(never trust)`", value: `\`${convert(amountPence)}\``},
+                { name: "Current Amount `(what we can still spend)`", value: `\`${convert(currentAmountPence)}\``},
+                { name: "Pending `(what still needs to go out)`", value: `\`${convert(pendingPence)}\``}
+                )
             // interaction.editReply({ embeds: [userinfo], components: [row] });
             interaction.editReply({ embeds: [bank]});
     }
