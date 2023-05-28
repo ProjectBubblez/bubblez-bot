@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const { Client, SlashCommandBuilder, ActivityType, EmbedBuilder, PermissionsBitField, ApplicationCommandOptionType, InteractionType, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection } = require("discord.js");
 client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
-global.ver = `V3.${fs.readdirSync("./commands/").length}.54`;
+global.ver = `V3.${fs.readdirSync("./commands/").length}.55`;
 global.footer = "Created by the Bubblez Team";
 global.developers = [
     '200612445373464576',
@@ -245,6 +245,7 @@ client.once('ready', async () => {
     console.log('✔  '.green + colors.green(`bot online | ${ver}`));
     startUpdatingChannels();
     startUpdatingChannelsDev();
+    startUpdatingLangDev();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -411,26 +412,118 @@ function startUpdatingChannelsDev(){
                 }else{
                     Status.setColor("#d92d43");
                 }
-                client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).send({ embeds: [Status], components: [row]  }).then(function (message){
-                    var d = new Date(message.createdTimestamp);
-                    let yyyy = d.getFullYear();
-                    let mm = d.getMonth() + 1;
-                    let dd = d.getDate();
+                // client.guilds.cache.get(config.guildiddev).channels.cache.get(config.statuschanneliddev).send({ embeds: [Status], components: [row]  }).then(function (message){
+                //     var d = new Date(message.createdTimestamp);
+                //     let yyyy = d.getFullYear();
+                //     let mm = d.getMonth() + 1;
+                //     let dd = d.getDate();
 
-                    if (dd < 10) dd = '0' + dd;
-                    if (mm < 10) mm = '0' + mm;
+                //     if (dd < 10) dd = '0' + dd;
+                //     if (mm < 10) mm = '0' + mm;
 
-                    let formattedD = dd + '/' + mm + '/' + yyyy;
+                //     let formattedD = dd + '/' + mm + '/' + yyyy;
 
-                    message.startThread({
-                        name: `Status:『${statusChannelNameDev}』『${formattedD}』`,
-                        autoArchiveDuration: 10080,
-                    });
-                });
+                //     message.startThread({
+                //         name: `Status:『${statusChannelNameDev}』『${formattedD}』`,
+                //         autoArchiveDuration: 10080,
+                //     });
+                // });
                 console.log(`[Dev] Channel's new name is ${newChannel.name}`);
             }).catch(console.error);
         }
     }, 60e3)
+}
+
+
+function getProgressBar(percentage, totalWidth) {
+    const filledWidth = Math.round((percentage / 100) * totalWidth);
+    const emptyWidth = totalWidth - filledWidth;
+    const filledBar = "█".repeat(filledWidth);
+    const emptyBar = "░".repeat(emptyWidth);
+    return `${filledBar}${emptyBar}`;
+  }
+function startUpdatingLangDev(){
+    let langChannelNameDev;
+    let BillyDev = "";
+    let jsoninfo;
+    setInterval(async () => {
+        let url = "https://api.crowdin.com/api/v2/projects/574305/languages/progress?limit=100"
+        let headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "+process.env.CROWDINTOKEN
+        }
+        await fetch(url, {method: 'GET', headers: headers,}).then(res => res.json()).then(function(json){jsoninfo = json})
+        // let response = await fetch('https://api.crowdin.com/api/v2/projects/574305/languages/progress?limit=100').then(async res => {
+        //     let statusCode = res.status;
+        //     let json = await res.json();
+        //     // console.log(json)
+        //     return { statusCode, json };
+        //   }).catch(console.error);
+        const list = jsoninfo.data.map(item => ({
+            languageId: item.data.languageId,
+            translationProgress: item.data.translationProgress,
+            approvalProgress: item.data.approvalProgress
+          }));
+          
+        //   const stringifiedList = JSON.stringify(list);
+        //   console.log(stringifiedList);
+        list.forEach(item => {
+            const translationBar = getProgressBar(item.translationProgress, 20);
+            const approvalBar = getProgressBar(item.approvalProgress, 20);
+            let langstring;
+            if (item.languageId.length > 2) {
+                langstring = item.languageId.substring(3).toLowerCase(); // Remove the first 3 characters
+            }else{
+                langstring = item.languageId;
+            }
+            switch(langstring){
+                default:
+                    langstring = ":flag_"+langstring+":";
+                break;
+                case "cs":
+                    langstring = ":flag_cz:"
+                break;
+                case "da":
+                    langstring = ":flag_dk:"
+                break;
+                case "el":
+                    langstring = ":flag_gr:"
+                break;
+                case "he":
+                    langstring = ":flag_il:"
+                break;
+                case "ja":
+                    langstring = ":flag_jp:"
+                break;
+                case "ko":
+                    langstring = ":flag_kr:"
+                break;
+                case "uk":
+                    langstring = ":flag_ua:"
+                break;
+            }
+            BillyDev = BillyDev + `Language: ${langstring} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
+        })
+        // client.channels.cache.get("806672126379294722").send(BillyDev)
+        const channel = client.channels.cache.get("1083914390903980052");
+        // const maxCharacters = 1999;
+
+        // if (BillyDev.length <= maxCharacters) {
+        //     channel.send(BillyDev);
+        // } else {
+        //     const firstMessage = BillyDev.substring(0, maxCharacters);
+        //     const secondMessage = BillyDev.substring(maxCharacters);
+        //     channel.send(firstMessage);
+        //     channel.send(secondMessage);
+        // }
+        // channel.messages.fetch("1112189121910280212").then(msg => msg.edit(BillyDev.substring(0, 1925)))
+        // channel.messages.fetch("1112189136489680916").then(msg => msg.edit(BillyDev.substring(1925)))
+        channel.send(BillyDev.substring(0, 10))
+        console.log("test1");
+        setTimeout(() => {
+            BillyDev = "";
+        }, 1e3)
+    }, 60e2)
 }
 
 function startCheckingGiveaways(){
