@@ -516,14 +516,14 @@ function startUpdatingLangDev(){
         //     channel.send(firstMessage);
         //     channel.send(secondMessage);
         // }
-        // channel.messages.fetch("1112189121910280212").then(msg => msg.edit(BillyDev.substring(0, 1925)))
-        // channel.messages.fetch("1112189136489680916").then(msg => msg.edit(BillyDev.substring(1925)))
-        channel.send(BillyDev.substring(0, 10))
-        console.log("test1");
+        channel.messages.fetch("1112190477702271018").then(msg => msg.edit(BillyDev.substring(0, 1925)))
+        channel.messages.fetch("1112190502780010606").then(msg => msg.edit(BillyDev.substring(1925)))
+        // channel.send(BillyDev.substring(0, 10))
+        // console.log("test1");
         setTimeout(() => {
             BillyDev = "";
         }, 1e3)
-    }, 60e2)
+    }, 60e3)
 }
 
 function startCheckingGiveaways(){
