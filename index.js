@@ -584,15 +584,15 @@ function startUpdatingLang(){
             Alphred = Alphred + `Username: ${!item.discordid?item.crowdin:'<@'+item.discordid+'>'} | Language: ${item.langid}\n`
         })
         const channel = client.channels.cache.get("1083914390903980052");
-        // channel.messages.fetch("1112190477702271018").then(msg => msg.edit(Billy.substring(0, 1925)))
-        // channel.messages.fetch("1112190502780010606").then(msg => msg.edit(Billy.substring(1925)))
-        // channel.messages.fetch("1112483266491060264").then(msg => msg.edit(Alphred))
-        channel.send(Billy.substring(0, 10))
+        channel.messages.fetch("1112539142207844362").then(msg => msg.edit(Billy.substring(0, 1925)))
+        channel.messages.fetch("1112539166870343790").then(msg => msg.edit(Billy.substring(1925)))
+        channel.messages.fetch("1112539192518524928").then(msg => msg.edit(Alphred))
+        // channel.send(Billy.substring(0, 10))
         setTimeout(() => {
             Billy = "";
             Alphred = "";
         }, 1e3)
-    }, 60e2)
+    }, 60e3)
 }
 function startUpdatingLangDev(){
     let BillyDev = "";
