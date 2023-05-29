@@ -104,6 +104,13 @@ if(fs.existsSync("./giveaways.json")){
     global.giveaways = {};
 }
 
+// if(fs.existsSync("./langcont.json")){
+//     global.langcont = JSON.parse(fs.readFileSync("./langcont.json"));
+// }else{
+//     global.langcont = {};
+// }
+
+
 console.log('➤  '.gray + "Started loading commands".gray);
 client.commands = new Collection();
 let commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith('.js'));
@@ -245,7 +252,8 @@ client.once('ready', async () => {
     console.log('✔  '.green + colors.green(`bot online | ${ver}`));
     startUpdatingChannels();
     startUpdatingChannelsDev();
-    startUpdatingLangDev();
+    startUpdatingLang();
+    // startUpdatingLangDev();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -441,28 +449,179 @@ function getProgressBar(percentage, totalWidth) {
     const filledBar = "█".repeat(filledWidth);
     const emptyBar = "░".repeat(emptyWidth);
     return `${filledBar}${emptyBar}`;
-  }
-function startUpdatingLangDev(){
-    let langChannelNameDev;
-    let BillyDev = "";
+}
+function getFlag(lang) {
+    switch(lang){
+        default:
+            return ":flag_"+lang+":";
+        break;
+        case "af":
+            return ":flag_za:"; //Afrikaans
+        break;
+        case "ar":
+            return ":flag_ps:"; //Arabic
+        break;
+        case "bg":
+            return ":flag_bg:"; //Bulgarian
+        break;
+        case "ca":
+            return "<:flag_esct:1112499369409773568>"; //Catalan (Custom)
+        break;
+        case "cs":
+            return ":flag_cz:"; //Czech
+        break;
+        case "da":
+            return ":flag_dk:"; //Danish
+        break;
+        case "de":
+            return ":flag_de:"; //German
+        break;
+        case "el":
+            return ":flag_gr:"; //Greek
+        break;
+        case "en-GB":
+            return ":flag_gb:"; //English, United Kingdom
+        break;
+        case "en-US":
+            return ":flag_us:"; //English, United States
+        break;
+        case "es-ES":
+            return ":flag_es:"; //Spanish
+        break;
+        case "fi":
+            return ":flag_fi:"; //Finnish
+        break;
+        case "fr":
+            return ":flag_fr:"; //French
+        break;
+        case "he":
+            return ":flag_il:"; //Hebrew
+        break;
+        case "hu":
+            return ":flag_hu:"; //Hungarian
+        break;
+        case "it":
+            return ":flag_it:"; //Italian
+        break;
+        case "ja":
+            return ":flag_jp:"; //Japanese
+        break;
+        case "ko":
+            return ":flag_kr:"; //Korean
+        break;
+        case "nl":
+            return ":flag_nl:"; //Dutch
+        break;
+        case "no":
+            return ":flag_no:"; //Norwegian
+        break;
+        case "pl":
+            return ":flag_pl:"; //Polish
+        break;
+        case "pt-BR":
+            return ":flag_br:"; //Portuguese, Brazilian
+        break;
+        case "pt-PT":
+            return ":flag_pt:"; //Portuguese
+        break;
+        case "ro":
+            return ":flag_ro:"; //Romanian
+        break;
+        case "ru":
+            return ":flag_ru:"; //Russian
+        break;
+        case "sr":
+            return ":flag_rs:"; //Serbian (Cyrillic)
+        break;
+        case "sv-SE":
+            return ":flag_se:"; //Swedish
+        break;
+        case "tr":
+            return ":flag_tr:"; //Turkish
+        break;
+        case "uk":
+            return ":flag_ua:"; //Ukrainian
+        break;
+        case "vi":
+            return ":flag_vn:"; //Vietnamese
+        break;
+        case "zh-CN":
+            return ":flag_cn:S"; //Chinese Simplified
+        break;
+        case "zh-TW":
+            return ":flag_cn:T"; //Chinese Traditional
+        break;
+    }
+}
+function startUpdatingLang(){
+    let Billy = "";
+    let Alphred = "";
     let jsoninfo;
     setInterval(async () => {
+        let langcont = JSON.parse(fs.readFileSync("./langcont.json"));
         let url = "https://api.crowdin.com/api/v2/projects/574305/languages/progress?limit=100"
         let headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer "+process.env.CROWDINTOKEN
         }
         await fetch(url, {method: 'GET', headers: headers,}).then(res => res.json()).then(function(json){jsoninfo = json})
+        const list = jsoninfo.data.map(item => ({
+            languageId: item.data.languageId,
+            translationProgress: item.data.translationProgress,
+            approvalProgress: item.data.approvalProgress
+          }));
+        const listcont = langcont.data.map(item => ({
+            discordid: item.discordid,
+            crowdin: item.crowdin,
+            langid: Array.isArray(item.langid) ? item.langid.map(lang => getFlag(lang)).join(" ") : getFlag(item.langid)
+          }));
+        list.forEach(item => {
+            const translationBar = getProgressBar(item.translationProgress, 20);
+            const approvalBar = getProgressBar(item.approvalProgress, 20);
+            Billy = Billy + `Language: ${langstring} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
+        })
+        listcont.forEach(item => {
+            Alphred = Alphred + `Username: ${!item.discordid?item.crowdin:'<@'+item.discordid+'>'} | Language: ${item.langid}\n`
+        })
+        const channel = client.channels.cache.get("1083914390903980052");
+        // channel.messages.fetch("1112190477702271018").then(msg => msg.edit(Billy.substring(0, 1925)))
+        // channel.messages.fetch("1112190502780010606").then(msg => msg.edit(Billy.substring(1925)))
+        // channel.messages.fetch("1112483266491060264").then(msg => msg.edit(Alphred))
+        channel.send(Billy.substring(0, 10))
+        setTimeout(() => {
+            Billy = "";
+            Alphred = "";
+        }, 1e3)
+    }, 60e3)
+}
+function startUpdatingLangDev(){
+    let BillyDev = "";
+    let AlphredDev = "";
+    let jsoninfoDev;
+    let jsoninfocontDev;
+    setInterval(async () => {
+        let langcont = JSON.parse(fs.readFileSync("./langcont.json"));
+        let url = "https://api.crowdin.com/api/v2/projects/574305/languages/progress?limit=100"
+        let headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "+process.env.CROWDINTOKEN
+        }
+        await fetch(url, {method: 'GET', headers: headers,}).then(res => res.json()).then(function(json){jsoninfoDev = json})
         // let response = await fetch('https://api.crowdin.com/api/v2/projects/574305/languages/progress?limit=100').then(async res => {
         //     let statusCode = res.status;
         //     let json = await res.json();
         //     // console.log(json)
         //     return { statusCode, json };
         //   }).catch(console.error);
-        const list = jsoninfo.data.map(item => ({
+        const list = jsoninfoDev.data.map(item => ({
             languageId: item.data.languageId,
             translationProgress: item.data.translationProgress,
             approvalProgress: item.data.approvalProgress
+          }));
+        const listcont = langcont.data.map(item => ({
+            discordid: item.discordid,
+            crowdin: item.crowdin,
+            langid: Array.isArray(item.langid) ? item.langid.map(lang => getFlag(lang)).join(" ") : getFlag(item.langid)
           }));
           
         //   const stringifiedList = JSON.stringify(list);
@@ -470,42 +629,19 @@ function startUpdatingLangDev(){
         list.forEach(item => {
             const translationBar = getProgressBar(item.translationProgress, 20);
             const approvalBar = getProgressBar(item.approvalProgress, 20);
-            let langstring;
-            if (item.languageId.length > 2) {
-                langstring = item.languageId.substring(3).toLowerCase(); // Remove the first 3 characters
-            }else{
-                langstring = item.languageId;
-            }
-            switch(langstring){
-                default:
-                    langstring = ":flag_"+langstring+":";
-                break;
-                case "cs":
-                    langstring = ":flag_cz:"
-                break;
-                case "da":
-                    langstring = ":flag_dk:"
-                break;
-                case "el":
-                    langstring = ":flag_gr:"
-                break;
-                case "he":
-                    langstring = ":flag_il:"
-                break;
-                case "ja":
-                    langstring = ":flag_jp:"
-                break;
-                case "ko":
-                    langstring = ":flag_kr:"
-                break;
-                case "uk":
-                    langstring = ":flag_ua:"
-                break;
-            }
-            BillyDev = BillyDev + `Language: ${langstring} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
+            // let langstring;
+            // if (item.languageId.length > 2) {
+            //     langstring = item.languageId.substring(3).toLowerCase(); // Remove the first 3 characters
+            // }else{
+            //     langstring = item.languageId;
+            // }
+            BillyDev = BillyDev + `Language: ${getFlag(item.languageId)} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
+        })
+        listcont.forEach(item => {
+            AlphredDev = AlphredDev + `Username: ${!item.discordid?item.crowdin:'<@'+item.discordid+'>'} | Language: ${item.langid}\n`
         })
         // client.channels.cache.get("806672126379294722").send(BillyDev)
-        const channel = client.channels.cache.get("1083914390903980052");
+        const channel = client.channels.cache.get("1112482861686210660");
         // const maxCharacters = 1999;
 
         // if (BillyDev.length <= maxCharacters) {
@@ -516,14 +652,16 @@ function startUpdatingLangDev(){
         //     channel.send(firstMessage);
         //     channel.send(secondMessage);
         // }
-        channel.messages.fetch("1112190477702271018").then(msg => msg.edit(BillyDev.substring(0, 1925)))
-        channel.messages.fetch("1112190502780010606").then(msg => msg.edit(BillyDev.substring(1925)))
+        channel.messages.fetch("1112483216805330944").then(msg => msg.edit(BillyDev.substring(0, 1948)))
+        channel.messages.fetch("1112483241321058475").then(msg => msg.edit(BillyDev.substring(1948)))
+        channel.messages.fetch("1112483266491060264").then(msg => msg.edit(AlphredDev))
         // channel.send(BillyDev.substring(0, 10))
-        // console.log("test1");
+        console.log("[Dev] Ran Lang Update.");
         setTimeout(() => {
             BillyDev = "";
+            AlphredDev = "";
         }, 1e3)
-    }, 60e3)
+    }, 60e2)
 }
 
 function startCheckingGiveaways(){
