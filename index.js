@@ -578,7 +578,7 @@ function startUpdatingLang(){
         list.forEach(item => {
             const translationBar = getProgressBar(item.translationProgress, 20);
             const approvalBar = getProgressBar(item.approvalProgress, 20);
-            Billy = Billy + `Language: ${langstring} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
+            Billy = Billy + `Language: ${getFlag(item.languageId)} | Translation Progress: ${translationBar} | Approval Progress: ${approvalBar}\n`
         })
         listcont.forEach(item => {
             Alphred = Alphred + `Username: ${!item.discordid?item.crowdin:'<@'+item.discordid+'>'} | Language: ${item.langid}\n`
@@ -592,7 +592,7 @@ function startUpdatingLang(){
             Billy = "";
             Alphred = "";
         }, 1e3)
-    }, 60e3)
+    }, 60e2)
 }
 function startUpdatingLangDev(){
     let BillyDev = "";
