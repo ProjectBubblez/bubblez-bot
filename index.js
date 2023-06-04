@@ -453,7 +453,7 @@ function getProgressBar(percentage, totalWidth) {
 function getFlag(lang) {
     switch(lang){
         default:
-            return ":flag_"+lang+":";
+            return lang;
         break;
         case "af":
             return ":flag_za:"; //Afrikaans
@@ -551,6 +551,12 @@ function getFlag(lang) {
         case "zh-TW":
             return ":flag_cn:T"; //Chinese Traditional
         break;
+        case "lol":
+            return ":joy_cat:" //lol cat
+        break;
+        case "en-PT":
+            return ":pirate_flag:" //Pirate English
+        break;
     }
 }
 function startUpdatingLang(){
@@ -584,10 +590,11 @@ function startUpdatingLang(){
             Alphred = Alphred + `Username: ${!item.discordid?item.crowdin:'<@'+item.discordid+'>'} | Language: ${item.langid}\n`
         })
         const channel = client.channels.cache.get("1083914390903980052");
-        channel.messages.fetch("1112539142207844362").then(msg => msg.edit(Billy.substring(0, 1948)))
-        channel.messages.fetch("1112539166870343790").then(msg => msg.edit(Billy.substring(1948)))
+        channel.messages.fetch("1112539142207844362").then(msg => msg.edit(Billy.substring(0, 1952)))
+        channel.messages.fetch("1112539166870343790").then(msg => msg.edit(Billy.substring(1952)))
         channel.messages.fetch("1112539192518524928").then(msg => msg.edit(Alphred))
         // channel.send(Billy.substring(0, 10))
+        console.log("Ran Lang Update.");
         setTimeout(() => {
             Billy = "";
             Alphred = "";
@@ -652,8 +659,8 @@ function startUpdatingLangDev(){
         //     channel.send(firstMessage);
         //     channel.send(secondMessage);
         // }
-        channel.messages.fetch("1112483216805330944").then(msg => msg.edit(BillyDev.substring(0, 1948)))
-        channel.messages.fetch("1112483241321058475").then(msg => msg.edit(BillyDev.substring(1948)))
+        channel.messages.fetch("1112483216805330944").then(msg => msg.edit(BillyDev.substring(0, 1952)))
+        channel.messages.fetch("1112483241321058475").then(msg => msg.edit(BillyDev.substring(1952)))
         channel.messages.fetch("1112483266491060264").then(msg => msg.edit(AlphredDev))
         // channel.send(BillyDev.substring(0, 10))
         console.log("[Dev] Ran Lang Update.");
